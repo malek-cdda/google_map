@@ -1,7 +1,7 @@
 "use client";
 
 import CustomScript from "@/components/commonScript/CustomScript";
-import MapGoogle from "@/components/map/googleMap/GoogleMap";
+import MapGoogle from "@/components/googleMap/GoogleMap";
 
 import { useState, useEffect } from "react";
 
@@ -38,8 +38,7 @@ export default function Home() {
           />
           <button
             onClick={(e) => handleSubmitApiKey(e)}
-            className="border-2 text-black  shadow-md px-7 py-4 focus:none outline-none rounded-md placeholder-black   capitalize mx-3 hover:bg-gray-200 font-bold"
-          >
+            className="border-2 text-black  shadow-md px-7 py-4 focus:none outline-none rounded-md placeholder-black   capitalize mx-3 hover:bg-gray-200 font-bold">
             Submit
           </button>
         </div>
