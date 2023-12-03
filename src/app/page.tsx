@@ -1,5 +1,5 @@
 "use client";
-
+import React, { Fragment } from "react";
 import CustomScript from "@/components/commonScript/CustomScript";
 import MapGoogle from "@/components/googleMap/GoogleMap";
 
@@ -43,6 +43,7 @@ export default function Home() {
           </button>
         </div>
       )}
+
       <MapGoogle />
       <CustomScript apiKey={checkApiKey} />
     </main>

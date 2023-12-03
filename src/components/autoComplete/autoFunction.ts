@@ -3,7 +3,8 @@ export async function autoCompleteDeclare(
   marker: any,
   map: any,
   infoWindow: any,
-  setError: any
+  setError: any,
+  setNearBy: any
 ) {
   const input = document.getElementById("pac-input") as HTMLInputElement;
   const options = {
@@ -16,9 +17,10 @@ export async function autoCompleteDeclare(
   autocomplete.addListener("place_changed", () => {
     const place = autocomplete.getPlace();
     // not found any latitude lngongitude then return it
+    setNearBy([]);
     if (!place?.geometry?.location) {
       window.alert("wrong address");
-      return place;
+      return;
     }
     // set marker position
     marker.setPosition(place.geometry.location);
@@ -30,9 +32,8 @@ export async function autoCompleteDeclare(
     infoWindow.open(map);
     // search place street find function call
     streetViewDeclare(map, infoWindow, setError);
-    nearBySearch(map, "");
+    nearBySearch(map, setNearBy);
   });
-
   return { infoWindow, marker, map };
 }
 
@@ -43,46 +44,40 @@ export async function streetViewDeclare(
   setError: any
 ) {
   const sv = new google.maps.StreetViewService();
-  sv.getPanorama({ location: infoWindow.position, radius: 50 }).then(
-    processSVData
-  );
-  map.addListener("click", (event: any) => {
-    sv.getPanorama({ location: event.latLng, radius: 50 })
-      .then((e) => {
-        setError(true);
-        processSVData;
-      })
-      .catch((e: any) =>
-        // console.error("Street View data not found for this location.")
-        {
-          setError(false);
-        }
-      );
-  });
+  sv.getPanorama({ location: infoWindow.position, radius: 50 })
+    .then((e) => {
+      processSVData(e);
+      setError(true);
+    })
+    .catch((e: any) => {
+      setError(false);
+    });
+  // map.addListener("click", (event: any) => {
+  //   console.log(event.latLng);
+  //   sv.getPanorama({ location: event.latLng, radius: 50 })
+  //     .then((e) => {
+  //       map.setCenter(event.latLng);
+  //       processSVData(e);
+  //       setError(true);
+  //     })
+  //     .catch((e: any) => {
+  //       setError(false);
+  //     });
+  // });
 }
 // process street view data
 async function processSVData({ data }: google.maps.StreetViewResponse) {
+  console.log(data);
   let panorama = new google.maps.StreetViewPanorama(
     document.getElementById("pano") as HTMLElement
   );
   const location = data.location!;
-
   panorama.setPano(location.pano as string);
   panorama.setPov({
     heading: 270,
     pitch: 0,
   });
   panorama.setVisible(true);
-  //   map.addListener("click", () => {
-  //     const markerPanoID = location.pano;
-  //     // Set the Pano to use the passed panoID.
-  //     panorama.setPano(markerPanoID as string);
-  //     panorama.setPov({
-  //       heading: 270,
-  //       pitch: 0,
-  //     });
-  //     panorama.setVisible(true);
-  //   });
 }
 
 // nearby search function
@@ -93,10 +88,9 @@ export async function nearBySearch(map: any, setNearBy: any) {
   var pyrmont = new google.maps.LatLng(lat, lng);
   var request: any = {
     location: pyrmont,
-    radius: "15000",
-    type: ["restaurant"],
-
-    // keyword: ["hotel"],
+    radius: "1000",
+    // types: ["restaurants"],
+    keyword: ["restaurant"],
   };
   map.setCenter(pyrmont);
   // console.log(map.getCenter);
@@ -107,10 +101,7 @@ export async function nearBySearch(map: any, setNearBy: any) {
 
   function callback(results: any, status: any, pagination: any) {
     if (status == google.maps.places.PlacesServiceStatus.OK) {
-      results.map((item: any) => {
-        console.log(item.name);
-      });
-      //   setNearBy(results);
+      setNearBy((prev: any) => [...prev, ...results]);
     }
     if (pagination.hasNextPage) {
       pagination.nextPage();
