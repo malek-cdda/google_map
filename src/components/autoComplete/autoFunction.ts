@@ -18,6 +18,7 @@ export async function autoCompleteDeclare(
     const place = autocomplete.getPlace();
     // not found any latitude lngongitude then return it
     setNearBy([]);
+    console.log(place);
     if (!place?.geometry?.location) {
       window.alert("wrong address");
       return;
@@ -89,7 +90,7 @@ export async function nearBySearch(map: any, setNearBy: any) {
   var request: any = {
     location: pyrmont,
     radius: "1000",
-    // types: ["restaurants"],
+    // types: ["school", "university", "hospital", "bank", "atm"],
     keyword: ["restaurant"],
   };
   map.setCenter(pyrmont);
@@ -100,11 +101,9 @@ export async function nearBySearch(map: any, setNearBy: any) {
   }
 
   function callback(results: any, status: any, pagination: any) {
-    if (status == google.maps.places.PlacesServiceStatus.OK) {
-      setNearBy((prev: any) => [...prev, ...results]);
-    }
     if (pagination.hasNextPage) {
       pagination.nextPage();
+      setNearBy((prev: any) => [...prev, ...results]);
     }
   }
   performSearch(request);

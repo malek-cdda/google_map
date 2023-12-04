@@ -22,11 +22,11 @@ const AutoComplete = ({ autoComplete, streetView }: any) => {
     }
   }, [streetView, autoComplete, setError, error]);
   const [placeData, setPlaceData] = useState<any>([]);
+  const [unique, setUnique] = useState<any>([]);
+
   useEffect(() => {
-    // console.log(nearBy[0]);
+    setUnique([]);
     nearBy.map((item: any) => {
-      // console.log(item?.opening_hours?.weekday_text?.length);
-      // console.log(JSON.stringify(item.opening_hours, "hours", 24));
       axios
         .get(`http://localhost:3000/api/map?placeId=${item.place_id}`)
         .then((res) => {
@@ -34,10 +34,22 @@ const AutoComplete = ({ autoComplete, streetView }: any) => {
         });
     });
   }, [nearBy]);
-  console.log(placeData);
+  // console.log(placeData);
+  // console.log(nearBy);
+  // console.log(placeData);
   // console.log(
   //   `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=AWU5eFgBueuOBi49CThcNCG20i5MwcVF0WfFJZJI7t1AGBYyZlZO4U4cQs55w2rZHqS9HbttHajV0PZDByUGdeMa4RrLKrW8gCgwHxQB56rSAPxQEuOtaSuZtq_T01L6cHh_32LtS2ox_iZVimWy5TZ0nqJdGi4baDoh7pnE9ZIePnOHbny1&key=AIzaSyD-CWmVyAapUI5zhqL8zIj8Oa6a95UexVs`
   // );
+
+  useEffect(() => {
+    // make a array of name and filter it
+    const name = placeData.map((item: any) => item.name);
+    // arranging the unique array data
+    const placeDataValue = placeData.filter(
+      (item: any, index: number) => !name.includes(item.name, index + 1)
+    );
+    setUnique(placeDataValue);
+  }, [nearBy, placeData]);
   return (
     <div className="container mx-auto">
       <div className={`grid  ${!error ? "grid-cols-1" : "grid-cols-2"}`}>
@@ -64,12 +76,33 @@ const AutoComplete = ({ autoComplete, streetView }: any) => {
         </h1>
       )}
       <div className="grid lg:grid-cols-5 md:grid-cols-4 sm:grid-cols-2 grid-cols-1 gap-4">
-        {nearBy.map((item: any, index: number) => (
-          <div key={index} className="border shadow-md p-3 rounded-md">
-            <h1 className="font-bold text-[16px]">{item.name}</h1>
-            <img src={item?.icon} alt="loading..." />
-          </div>
-        ))}
+        {placeData.length > 0 &&
+          unique?.map((item: any, index: number) => (
+            <div key={index} className="border shadow-md p-3 rounded-md">
+              <h1 className="font-bold text-[16px]">
+                {item.name} {item.rating}
+              </h1>
+              <h3>{item?.formatted_phone_number}</h3>
+              <a target="_blank" href={item.website}>
+                go to website
+              </a>
+              <br />
+              <span>
+                {item?.current_opening_hours?.open_now ? "open" : "close"}
+              </span>
+              {item?.photos?.length > 0 && (
+                <img
+                  src={`https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${
+                    item?.photos[item?.photos?.length - 1]?.photo_reference
+                  }&key=AIzaSyD-CWmVyAapUI5zhqL8zIj8Oa6a95UexVs`}
+                  alt=""
+                  width="100%"
+                  height="150px"
+                  className="rounded-md h-[150px]"
+                />
+              )}
+            </div>
+          ))}
       </div>
     </div>
   );
