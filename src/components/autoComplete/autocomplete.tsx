@@ -3,6 +3,8 @@ import { autoCompleteDeclare, streetViewDeclare } from "./autoFunction";
 
 import { infoWindowDeclare, mapDeclare, markerDeclare } from "../map/map";
 import axios from "axios";
+import Rating from "react-rating";
+import Link from "next/link";
 
 const AutoComplete = ({ autoComplete, streetView }: any) => {
   const [nearBy, setNearBy] = useState<any>([]);
@@ -50,6 +52,9 @@ const AutoComplete = ({ autoComplete, streetView }: any) => {
     );
     setUnique(placeDataValue);
   }, [nearBy, placeData]);
+  console.log(unique);
+  const data = new Date();
+  console.log(data.getUTCDate());
   return (
     <div className="container mx-auto">
       <div className={`grid  ${!error ? "grid-cols-1" : "grid-cols-2"}`}>
@@ -75,32 +80,53 @@ const AutoComplete = ({ autoComplete, streetView }: any) => {
           restaurant
         </h1>
       )}
-      <div className="grid lg:grid-cols-5 md:grid-cols-4 sm:grid-cols-2 grid-cols-1 gap-4">
+      <div className=" w-1/2 flex  flex-col space-y-5">
         {placeData.length > 0 &&
           unique?.map((item: any, index: number) => (
-            <div key={index} className="border shadow-md p-3 rounded-md">
-              <h1 className="font-bold text-[16px]">
-                {item.name} {item.rating}
-              </h1>
-              <h3>{item?.formatted_phone_number}</h3>
-              <a target="_blank" href={item.website}>
-                go to website
-              </a>
-              <br />
-              <span>
-                {item?.current_opening_hours?.open_now ? "open" : "close"}
-              </span>
-              {item?.photos?.length > 0 && (
-                <img
-                  src={`https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${
-                    item?.photos[item?.photos?.length - 1]?.photo_reference
-                  }&key=AIzaSyD-CWmVyAapUI5zhqL8zIj8Oa6a95UexVs`}
-                  alt=""
-                  width="100%"
-                  height="150px"
-                  className="rounded-md h-[150px]"
-                />
-              )}
+            <div
+              key={index}
+              className="group border shadow-md p-3 rounded-md flex justify-between w-full  relative ">
+              <div className="w-60">
+                <h1 className="font-bold text-[16px]">{item.name}</h1>
+                <span className="text-gray-400 block">
+                  {item.rating}{" "}
+                  <Rating
+                    readonly
+                    placeholderRating={item.rating}
+                    emptySymbol="far fa-star text-yellow-500"
+                    fullSymbol="fas fa-star text-yellow-500"
+                    placeholderSymbol={
+                      <span className="fas fa-star text-yellow-600"></span>
+                    }
+                    fractions={2}
+                  />{" "}
+                  {item.user_ratings_total}
+                </span>
+                {/* time close open time  */}
+                <span>{}</span>
+                <span>{item?.formatted_address}</span>
+                <div className="pt-2">
+                  <Link
+                    href={item?.website?.length > 0 ? item?.website : ""}
+                    className="hover:underline hover:text-blue-500 pt-9 ">
+                    Website{" "}
+                  </Link>
+                </div>
+                <br />
+              </div>
+              <div className="w-40">
+                {item?.photos?.length > 0 && (
+                  <img
+                    src={`https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${
+                      item?.photos[item?.photos?.length - 1]?.photo_reference
+                    }&key=AIzaSyD-CWmVyAapUI5zhqL8zIj8Oa6a95UexVs`}
+                    alt=""
+                    width="100%"
+                    height="150px"
+                    className="rounded-md w-full h-40"
+                  />
+                )}
+              </div>
             </div>
           ))}
       </div>

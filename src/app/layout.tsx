@@ -24,6 +24,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>{children}</body>
       <Script src="https://polyfill.io/v3/polyfill.min.js?features=default"></Script>
+      <Script
+        src="https://kit.fontawesome.com/de6730f8c3.js"
+        crossOrigin="anonymous"></Script>
     </html>
   );
 }
