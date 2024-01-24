@@ -31,7 +31,7 @@ const Navbar = () => {
       path: "/ownProperty",
     },
     {
-      name: "ViewMarker",
+      name: "View Street Marker",
       path: "/view",
     },
     // {
