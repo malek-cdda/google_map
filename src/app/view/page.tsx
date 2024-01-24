@@ -50,11 +50,16 @@ const Home = () => {
     }
   }, []);
   return (
-    <div>
-      <div id="floating-panel">
-        <input type="button" value="Toggle Street View" id="toggle" />
+    <div className="container mx-auto rounded-md">
+      <div id="floating-panel" className="text-center  ">
+        <input
+          type="button"
+          value="Toggle Street View"
+          id="toggle"
+          className=" bg-blue-500 text-white p-2 rounded-md cursor-pointer my-5 hover:bg-blue-400"
+        />
       </div>
-      <div id="map" className="h-[300px]"></div>
+      <div id="map" className="h-[500px] rounded-md"></div>
     </div>
   );
 };
