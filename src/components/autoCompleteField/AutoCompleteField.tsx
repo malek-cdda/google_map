@@ -48,18 +48,18 @@ const AutoCompleteField = ({
         );
 
       // view sreet for using this function you have to make streetView true
-      // const panorama = new google.maps.StreetViewPanorama(
-      //   document.getElementById("pano") as any,
-      //   {
-      //     position: astor,
-      //     pov: {
-      //       heading: 265,
-      //       pitch: 0,
-      //     },
-      //     disableDefaultUI: true,
-      //     controlSize: 0,
-      //   }
-      // );
+      const panorama = new google.maps.StreetViewPanorama(
+        document.getElementById("pano") as any,
+        {
+          position: astor,
+          pov: {
+            heading: 265,
+            pitch: 0,
+          },
+          disableDefaultUI: true,
+          controlSize: 0,
+        }
+      );
       const cafeMarker = new google.maps.Marker({
         draggable: true,
         position: astor,
@@ -67,37 +67,24 @@ const AutoCompleteField = ({
         icon: "https://chart.apis.google.com/chart?chst=d_map_pin_icon&chld=cafe|FFFF00",
         title: "Cafe",
       });
-      let panorama = map.getStreetView(); // TODO fix type
-      panorama.setPosition(astor);
-      panorama.setPov(
-        /** @type {google.maps.StreetViewPov} */ {
-          heading: 265,
-          pitch: 0,
-        }
-      );
-      if (streetView) {
-        panorama.setVisible(true);
-      } else {
-        panorama.setVisible(false);
-      }
-      // panorama.setVisible(true);
-      // panorama.addListener("position_changed", (e: any) => {
-      //   const panoramaPosition = panorama.getPosition();
-      // });
 
-      // map.setStreetView(panorama);
+      panorama.addListener("position_changed", (e: any) => {
+        const panoramaPosition = panorama.getPosition();
+      });
+
+      map.setStreetView(panorama);
       // // map.getStreetView();
-      // panorama.setPosition(astor);
+      panorama.setPosition(astor);
       const svService = new google.maps.StreetViewService();
       // Check if Street View is available at the specified location
-      // svService.getPanorama({ location: astor, radius: 50 }, (data, status) => {
-      //   if (status === google.maps.StreetViewStatus.OK) {
-      //     setError(false);
-      //   } else {
-      //     // Street View is not available at this location
-      //     setError(true);
-      //   }
-      // });
+      svService.getPanorama({ location: astor, radius: 50 }, (data, status) => {
+        if (status === google.maps.StreetViewStatus.OK) {
+          setError(false);
+        } else {
+          // Street View is not available at this location
+          setError(true);
+        }
+      });
     }
     window.initMap = initMap;
     if (typeof google !== "undefined") {
