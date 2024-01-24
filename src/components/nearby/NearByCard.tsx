@@ -1,0 +1,30 @@
+import Image from "next/image";
+
+export const NearbyCard = ({ item }: any) => {
+  return (
+    <div className="flex justify-between items-center border rounded-md     gap-3">
+      <div className="py-2 px-3 space-y-2">
+        <span className="text-sm font-bold">name {item?.name}</span>
+        <div className="space-x-3">
+          <span className="text-sm font-bold ">{item.rating}</span>
+          <span className="text-sm  ">ratingstar</span>
+          <span className="text-sm font-bold ">
+            ({item?.user_ratings_total})
+          </span>
+        </div>
+        <span className="text-sm  ">{item?.vicinity}</span>
+      </div>
+      <div>
+        <Image
+          alt="loading"
+          width={1000}
+          height={1000}
+          className="h-[150px] w-[150px]  object-cover rounded-md border"
+          src={`https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${
+            item?.photos?.length && item?.photos[0]?.photo_reference
+          }&key=${process.env.NEXT_PUBLIC_API_KEY}`}
+        />
+      </div>
+    </div>
+  );
+};
