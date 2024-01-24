@@ -30,6 +30,10 @@ const Navbar = () => {
       name: "OwnProperty",
       path: "/ownProperty",
     },
+    {
+      name: "ViewMarker",
+      path: "/view",
+    },
     // {
     //   name: "all in one",
     //   path: "/map/marker/simple",

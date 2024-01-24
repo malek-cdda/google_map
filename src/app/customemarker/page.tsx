@@ -1,7 +1,7 @@
 "use client";
 import Marker from "@/components/custommarker/marker";
 import React from "react";
-let apiKey = "AIzaSyD-CWmVyAapUI5zhqL8zIj8Oa6a95UexVs";
+let apiKey = process.env.NEXT_PUBLIC_API_KEY;
 const Home = () => {
   return (
     <div>

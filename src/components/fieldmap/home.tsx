@@ -64,7 +64,7 @@ export const AutoComplete = ({ apiKey = "", autoComplete = false }: any) => {
   const [placeData, setPlaceData] = useState<any>({});
   useEffect(() => {
     async function placeFetch() {
-      fetch(`http://localhost:3000/api/placeapi?placeId=${placeId}`)
+      fetch(`/api/placeapi?placeId=${placeId}`)
         .then((response) => response.json())
         .then((data) => {
           setPlaceData(data.result.result);
@@ -80,7 +80,7 @@ export const AutoComplete = ({ apiKey = "", autoComplete = false }: any) => {
   // type=restaurant&keyword=restaurant
   useEffect(() => {
     fetch(
-      `http://localhost:3000/api?token=${token}&lat=${placeData?.geometry?.location?.lat}&lng=${placeData?.geometry?.location?.lng}&type=${nearValue}&keyword=${nearValue}`
+      `/api?token=${token}&lat=${placeData?.geometry?.location?.lat}&lng=${placeData?.geometry?.location?.lng}&type=${nearValue}&keyword=${nearValue}`
     )
       .then((res) => res.json())
       .then((data) => {
