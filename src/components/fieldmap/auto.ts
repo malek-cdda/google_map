@@ -17,10 +17,13 @@ export async function autoCompleteDeclare(
   autocomplete.bindTo("bounds", map);
   autocomplete.addListener("place_changed", () => {
     const place = autocomplete.getPlace();
+    console.log(place);
     setPlaceId(place?.place_id);
-    if (!place?.geometry?.location) {
-      window.alert("wrong address");
-      return place;
+    if (!place.geometry || !place.geometry.location) {
+      // User entered the name of a Place that was not suggested and
+      // pressed the Enter key, or the Place Details request failed.
+      window.alert("No details available for input: '" + place.name + "'");
+      return;
     }
     // console.log(place?.geometry?.location?.lat());
     marker.setPosition(place.geometry.location);

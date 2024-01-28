@@ -1,5 +1,9 @@
 import React, { useEffect } from "react";
 const Boundary = () => {
+  const [mapData, setMapData] = React.useState<any>({
+    name: "ADMINISTRATIVE_AREA_LEVEL_2",
+    mapId: "a3efe1c035bad51b",
+  });
   let map: google.maps.Map;
   let featureLayer: any;
   let infoWindow: any;
@@ -22,15 +26,21 @@ const Boundary = () => {
     )) as google.maps.MapsLibrary;
     map = new Map(document.getElementById("map") as HTMLElement, {
       center: { lat: 39.23, lng: -105.73 },
-      zoom: 8,
+      zoom: 4,
       // In the cloud console, configure your Map ID with a style that enables the
       // 'Administrative Area Level 2' Data Driven Styling type.
-      mapId: "a3efe1c035bad51b", // Substitute your own map ID.
+      mapId: mapData?.mapId, // Substitute your own map ID.
       mapTypeControl: false,
+    });
+    const documents = document.getElementById("boundary_id") as HTMLElement;
+    documents.addEventListener("change", (e) => {
+      let value = JSON.parse((e.target as any).value);
+      console.log(value);
+      setMapData(value);
     });
     // Add the feature layer.
     //@ts-ignore
-    featureLayer = map.getFeatureLayer("ADMINISTRATIVE_AREA_LEVEL_2");
+    featureLayer = map.getFeatureLayer(mapData?.name);
     if (!featureLayer) {
       console.error("Feature layer is null or undefined.");
       return;
@@ -78,7 +88,7 @@ const Boundary = () => {
   // Define styles.
   // Stroke and fill with minimum opacity value.
   const styleDefault = {
-    strokeColor: "white",
+    strokeColor: "transparent",
     strokeOpacity: 1.0,
     strokeWeight: 1.0,
     fillColor: "white",
@@ -123,10 +133,49 @@ const Boundary = () => {
     if (typeof google !== "undefined") {
       initMap();
     }
-  }, []);
+  }, [mapData]);
+  // const handleClicks = (e: any) => {
+  //   let value = JSON.parse(e.target.value);
+  //   // console.log(value);
+  //   setMapData(value);
+  // };
   return (
-    <div>
-      <div id="map" className="h-[500px]"></div>
+    <div className="container mx-auto">
+      <div className="relative">
+        <div id="map" className="h-[500px] "></div>
+        <div className="bo py-5">
+          <select
+            // onChange={handleClicks}
+            className="border px-3 py-2 rounded-lg w-1/2 absolute top-0 m-2 left-0 transform translate-x-1/2 cursor-pointer"
+            id="boundary_id">
+            {[
+              {
+                name: "ADMINISTRATIVE_AREA_LEVEL_2",
+                mapId: "a3efe1c035bad51b",
+              },
+              {
+                name: "ADMINISTRATIVE_AREA_LEVEL_1",
+                mapId: "a8540ac9b4094555",
+              },
+              {
+                name: "COUNTRY",
+                mapId: "a8540ac9b4094555",
+              },
+              {
+                name: "LOCALITY",
+                mapId: "a3efe1c035bad51b",
+              },
+            ].map((item, index) => {
+              return (
+                <option value={JSON.stringify(item)} key={index}>
+                  {" "}
+                  {item.name}{" "}
+                </option>
+              );
+            })}
+          </select>
+        </div>
+      </div>
     </div>
   );
 };

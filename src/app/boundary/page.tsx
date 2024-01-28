@@ -3,11 +3,7 @@ import Boundary from "@/components/boundary/boundary";
 import React from "react";
 
 const Home = () => {
-  return (
-    <div>
-      <Boundary />
-    </div>
-  );
+  return <Boundary />;
 };
 
 export default Home;
