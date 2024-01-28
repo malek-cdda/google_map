@@ -60,13 +60,6 @@ const AutoCompleteField = ({
           controlSize: 0,
         }
       );
-      const cafeMarker = new google.maps.Marker({
-        draggable: true,
-        position: astor,
-        map,
-        icon: "https://chart.apis.google.com/chart?chst=d_map_pin_icon&chld=cafe|FFFF00",
-        title: "Cafe",
-      });
 
       panorama.addListener("position_changed", (e: any) => {
         const panoramaPosition = panorama.getPosition();

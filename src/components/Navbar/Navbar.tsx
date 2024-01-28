@@ -34,10 +34,6 @@ const Navbar = () => {
       name: "View Street Marker",
       path: "/view",
     },
-    // {
-    //   name: "all in one",
-    //   path: "/map/marker/simple",
-    // },
   ];
   return (
     <div>
