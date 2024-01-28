@@ -22,7 +22,7 @@ export async function autoCompleteDeclare(
     if (!place.geometry || !place.geometry.location) {
       // User entered the name of a Place that was not suggested and
       // pressed the Enter key, or the Place Details request failed.
-      window.alert("No details available for input: '" + place.name + "'");
+      window.alert("No details available for input: " + place.name + "'");
       return;
     }
     // console.log(place?.geometry?.location?.lat());

@@ -28,15 +28,20 @@ const NearBy = ({ apiKey = "", autoComplete = false }: any) => {
     }
   }, [streetView, autoComplete, apiKey, error, astor]);
   const [placeData, setPlaceData] = useState<any>({});
+  const [token, setToken] = useState<any>("");
+  const [nextToken, setNextToken] = useState<any>("");
   useEffect(() => {
     // placeId Fetch for place nearbydATA
+    setNearByData([]);
+    setNextToken("");
+    setToken("");
     placeFetch(placeId, setPlaceData);
   }, [placeId]);
   const [nearValue, setNearValue] = useState<any>("");
   const handleNearbySearch = (e: any) => {
     setNearValue(e.target.value);
   };
-  let token = "";
+
   // type=restaurant&keyword=restaurant
   useEffect(() => {
     fetch(
@@ -44,7 +49,9 @@ const NearBy = ({ apiKey = "", autoComplete = false }: any) => {
     )
       .then((res) => res.json())
       .then((data) => {
-        setNearByData(data?.result?.results);
+        console.log(data);
+        setNextToken(data?.result?.next_page_token);
+        setNearByData((prev: any) => [...prev, ...data?.result?.results]);
       });
   }, [
     nearValue,
@@ -53,9 +60,38 @@ const NearBy = ({ apiKey = "", autoComplete = false }: any) => {
     token,
   ]);
 
+  class haversineFormula {
+    constructor() {}
+    radiansMethod(degrees: any) {
+      return (degrees * Math.PI) / 180;
+    }
+    haversineDistance(obj1: any, obj2: any) {
+      //         a = sin²(φB - φA/2) + cos φA * cos φB * sin²(λB - λA/2)
+      // c = 2 * atan2( √a, √(1−a) )
+      // d = R ⋅ c
+      // here φ is latitude, λ is longitude, R is earth’s radius (mean radius = 6,371km)
+      const [lng1, lat1] = obj1;
+      const [lng2, lat2] = obj2;
+      const phi_1 = this.radiansMethod(lat1);
+      const phi_2 = this.radiansMethod(lat2);
+      const deltaPhi = this.radiansMethod(lat2 - lat1);
+      const deltaLamda = this.radiansMethod(lng2 - lng1);
+      const radius = 6371; // radius in km
+      const formula =
+        Math.pow(Math.sin(deltaPhi / 2), 2) +
+        Math.cos(phi_1) *
+          Math.cos(phi_2) *
+          Math.pow(Math.sin(deltaLamda / 2), 2);
+      const c = 2 * Math.atan2(Math.sqrt(formula), Math.sqrt(1 - formula));
+      const d = radius * c;
+      return d;
+    }
+  }
+  const haversine = new haversineFormula();
+
   return (
-    <div>
-      <div className="flex justify-center gap-10 container mx-auto">
+    <div className="container mx-auto">
+      <div className="flex justify-center gap-10 ">
         <div className="w-full  rounded-md">
           <div className="flex space-x-3">
             <input
@@ -84,8 +120,22 @@ const NearBy = ({ apiKey = "", autoComplete = false }: any) => {
       <div className="container mx-auto"></div>
       <div className="py-5   container mx-auto px-2 my-2 rounded-md grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 grid-cols-1 gap-2">
         {nearByData.map((item: any, index: any) => (
-          <NearbyCard key={index} item={item} />
+          <NearbyCard
+            key={index}
+            item={item}
+            haversine={haversine}
+            astor={astor}
+          />
         ))}
+      </div>
+      <div className="text-left flex justify-end">
+        {nextToken && (
+          <button
+            onClick={() => setToken(nextToken)}
+            className="rounded-lg bg-blue-400 py-2 px-2 text-white font-semibold hover:bg-blue-300 w-full mb-5">
+            Next{" "}
+          </button>
+        )}
       </div>
     </div>
   );

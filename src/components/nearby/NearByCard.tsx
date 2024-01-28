@@ -1,6 +1,10 @@
 import Image from "next/image";
 
-export const NearbyCard = ({ item }: any) => {
+export const NearbyCard = ({ item, haversine, astor }: any) => {
+  const distance = haversine.haversineDistance(
+    [astor.lat, astor.lng],
+    [item.geometry.location.lat, item.geometry.location.lng]
+  );
   return (
     <div className="flex justify-between items-center border rounded-md     gap-3">
       <div className="py-2 px-3 space-y-2">
@@ -8,9 +12,11 @@ export const NearbyCard = ({ item }: any) => {
         <div className="space-x-3">
           <span className="text-sm font-bold ">{item.rating}</span>
           <span className="text-sm  ">ratingstar</span>
-          <span className="text-sm font-bold ">
+          <span className="text-sm font-bold  ">
             ({item?.user_ratings_total})
           </span>
+          <br />
+          <span className="text-sm   "> distance: {distance.toFixed(3)} m</span>
         </div>
         <span className="text-sm  ">{item?.vicinity}</span>
       </div>
