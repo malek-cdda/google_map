@@ -35,7 +35,7 @@ const Home = () => {
         cafeMarker.setPosition(newPosition);
         setMarkerPosition({ lat: newPosition.lat(), lng: newPosition.lng() });
         value = newPosition; // Assign newPosition to the variable
-        // map.setCenter(markerPosition); // Set map center to marker position
+        map.setCenter(markerPosition); // Set map center to marker position
       });
 
       // We get the map's default panorama and set up some defaults.
