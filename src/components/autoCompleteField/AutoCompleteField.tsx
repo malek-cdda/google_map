@@ -124,6 +124,7 @@ const AutoCompleteField = ({
           </div>
         </div>
       </div>
+      {/* Street view button div  */}
       <div className=" flex gap-4 py-2">
         <div>
           <label className="  ">
@@ -141,6 +142,7 @@ const AutoCompleteField = ({
             </span>
           </label>
         </div>
+        {/* Map view button div  */}
         <div>
           <label className=" ">
             <input
@@ -157,6 +159,7 @@ const AutoCompleteField = ({
             </span>
           </label>
         </div>
+        {/* Auto complete address Field button */}
         <div>
           <label className=" ">
             <input
@@ -173,6 +176,7 @@ const AutoCompleteField = ({
             </span>
           </label>
         </div>
+        {/* Marker Move able button div  */}
         <div>
           <label className=" ">
             <input
