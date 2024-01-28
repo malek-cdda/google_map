@@ -16,8 +16,6 @@ export function dragAble(
   //   draggableMarker.setPosition(astor);
   draggableMarker.addListener("dragend", (event: any) => {
     const positions = draggableMarker.position as google.maps.LatLng;
-    // const lats: any = event?.latLng?.lat();
-    // const lngs: any = event?.latLng?.lng();
     const lats: any = event?.latLng?.lat();
     const lngs: any = event?.latLng?.lng();
     let position = { lat: lats, lng: lngs };

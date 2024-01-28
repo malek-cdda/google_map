@@ -1,6 +1,6 @@
 import { markerData } from "./../marker/data";
 export async function markerCustom(
-  params: any,
+  AdvanceElement: any,
   map: any,
 
   PinElement: any,
@@ -26,7 +26,7 @@ export async function markerCustom(
       glyphColor: "green",
       background: "yellow",
     });
-    const marker = new params({
+    const marker = new AdvanceElement({
       map,
       position,
       content: pinScaled?.element,

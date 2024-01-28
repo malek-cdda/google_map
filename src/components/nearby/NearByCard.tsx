@@ -9,11 +9,11 @@ export const NearbyCard = ({ item, haversine, astor }: any) => {
     <div className="flex justify-between items-center border rounded-md     gap-3">
       <div className="py-2 px-3 space-y-2">
         <span className="text-sm font-bold">name {item?.name}</span>
-        <div className="space-x-3">
-          <span className="text-sm font-bold ">{item.rating}</span>
-          <span className="text-sm  ">ratingstar</span>
+        <div className="   ">
+          <span className="text-sm font-bold ">{item.rating} </span>
+          <span className="text-sm  ">rating </span>
           <span className="text-sm font-bold  ">
-            ({item?.user_ratings_total})
+            ({item?.user_ratings_total}) total_rate_person
           </span>
           <br />
           <span className="text-sm   "> distance: {distance.toFixed(3)} m</span>

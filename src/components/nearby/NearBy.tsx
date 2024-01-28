@@ -39,6 +39,9 @@ const NearBy = ({ apiKey = "", autoComplete = false }: any) => {
   }, [placeId]);
   const [nearValue, setNearValue] = useState<any>("");
   const handleNearbySearch = (e: any) => {
+    setToken("");
+    setNextToken("");
+    setNearByData([]);
     setNearValue(e.target.value);
   };
 
