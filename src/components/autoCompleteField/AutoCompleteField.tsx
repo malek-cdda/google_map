@@ -137,7 +137,7 @@ const AutoCompleteField = ({
               }}
             />
             <span className="ms-3 text-sm font-medium text-black    ">
-              street view
+              Street view
             </span>
           </label>
         </div>
@@ -153,7 +153,7 @@ const AutoCompleteField = ({
               }}
             />
             <span className="ms-3 text-sm font-medium text-black    ">
-              Map view view
+              Map view
             </span>
           </label>
         </div>
@@ -169,7 +169,7 @@ const AutoCompleteField = ({
               }}
             />
             <span className="ms-3 text-sm font-medium text-black    ">
-              Auto Complete Field
+              Auto Complete address Field
             </span>
           </label>
         </div>
@@ -185,7 +185,7 @@ const AutoCompleteField = ({
               }}
             />
             <span className="ms-3 text-sm font-medium text-black    ">
-              Cursor Move able
+              Marker Move able
             </span>
           </label>
         </div>
