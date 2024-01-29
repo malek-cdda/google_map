@@ -6,7 +6,7 @@ export const NearbyCard = ({ item, haversine, astor }: any) => {
     [item.geometry.location.lat, item.geometry.location.lng]
   );
   return (
-    <div className="flex justify-between items-center border rounded-md     gap-3">
+    <div className="flex justify-between items-center border rounded-md     gap-3 capitalize">
       <div className="py-2 px-3 space-y-2">
         <span className="text-sm font-bold">name {item?.name}</span>
         <div className="   ">

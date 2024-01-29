@@ -155,7 +155,7 @@ const Boundary = () => {
               },
               {
                 name: "ADMINISTRATIVE_AREA_LEVEL_1",
-                mapId: "a8540ac9b4094555",
+                mapId: "1ebbc10e3f82a633",
               },
               {
                 name: "COUNTRY",
@@ -164,6 +164,14 @@ const Boundary = () => {
               {
                 name: "LOCALITY",
                 mapId: "a3efe1c035bad51b",
+              },
+              {
+                name: "NEIGHBORHOOD",
+                mapId: "a3efe1c035bad51b",
+              },
+              {
+                name: "POSTAL_CODE",
+                mapId: "8ec1ff859561face",
               },
             ].map((item, index) => {
               return (
