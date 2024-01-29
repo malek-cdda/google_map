@@ -167,11 +167,11 @@ const Boundary = () => {
               },
               {
                 name: "NEIGHBORHOOD",
-                mapId: "a3efe1c035bad51b",
+                mapId: "64b9a5471ed17f00",
               },
               {
                 name: "POSTAL_CODE",
-                mapId: "8ec1ff859561face",
+                mapId: "64b9a5471ed17f00",
               },
             ].map((item, index) => {
               return (
