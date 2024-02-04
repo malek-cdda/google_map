@@ -23,6 +23,7 @@ const AutoCompleteField = ({
   const [error, setError] = useState(false);
   let [astor, setAstor] = useState({ lat: 40.7128, lng: -74.006 });
   const [placeId, setPlaceId] = useState("");
+  const [placeName, setPlaceName] = useState("");
   useEffect(() => {
     async function initMap() {
       let { map, AdvancedMarkerElement } = await mapDeclare(astor);
@@ -44,7 +45,8 @@ const AutoCompleteField = ({
           AdvancedMarkerElement,
           setPlaceId,
           setAstor,
-          astor
+          astor,
+          setPlaceName
         );
 
       // view sreet for using this function you have to make streetView true
@@ -99,6 +101,7 @@ const AutoCompleteField = ({
     }
     placeFetch();
   }, [placeId]);
+  console.log(placeName, "placeName");
   return (
     <div className="container mx-auto">
       <div id="control"></div>
@@ -201,6 +204,8 @@ const AutoCompleteField = ({
             className=" border    z-50 py-2 px-4 rounded-full  outline-none placeholder:text-black focus:rounded-b-none focus:rounded-t-2xl  2  w-full "
             type="text"
             placeholder="Search Google Maps"
+            onChange={(e) => {}}
+            value={placeName || ""}
           />
         )}
       </div>

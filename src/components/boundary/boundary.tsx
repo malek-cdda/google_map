@@ -88,7 +88,7 @@ const Boundary = () => {
   // Define styles.
   // Stroke and fill with minimum opacity value.
   const styleDefault = {
-    strokeColor: "transparent",
+    strokeColor: "red",
     strokeOpacity: 1.0,
     strokeWeight: 1.0,
     fillColor: "white",
