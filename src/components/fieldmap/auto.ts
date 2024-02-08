@@ -32,13 +32,16 @@ export async function autoCompleteDeclare(
       // window.alert("No details available for input: " + place.name + "'");
       return;
     }
+
     // console.log(place?.geometry?.location?.lat());
     marker.setPosition(place.geometry.location);
-    map.setCenter(place.geometry.location);
-    infoWindow.setContent(place?.formatted_address);
-    infoWindow.setPosition(place.geometry.location);
-    infoWindow.open(map);
-    setAstor({ lat: map.getCenter().lat(), lng: map.getCenter().lng() });
+    if (place.formatted_address) {
+      map.setCenter(place.geometry.location);
+      infoWindow.setContent(place?.formatted_address);
+      infoWindow.setPosition(place.geometry.location);
+      infoWindow.open(map);
+      setAstor({ lat: map.getCenter().lat(), lng: map.getCenter().lng() });
+    }
   });
 }
 

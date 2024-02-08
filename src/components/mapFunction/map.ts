@@ -6,6 +6,7 @@ export async function mapDeclare(params: any) {
     zoom: 10,
     mapId: "15431d2b469f209dsfdsfsde",
     disableDefaultUI: true,
+    minZoom: 6,
   });
   let { AdvancedMarkerElement, PinElement } = (await google.maps.importLibrary(
     "marker"

@@ -4,18 +4,22 @@ import {
   markerDeclare,
 } from "@/components/mapFunction/map";
 import React, { useEffect, useState } from "react";
-import { autoCompleteDeclare } from "../autoComplete";
+import { autoCompleteDeclare, markerDraggable } from "../autoComplete";
+import { haversine } from "@/components/haversine/Haversine";
 
 const AutoComplete = () => {
   const [add, setAdd] = useState<number>(1);
   const [error, setError] = useState(false);
   const [astor, setAstor] = useState({ lat: 40.7128, lng: -74.006 });
   const [placeIds, setPlaceIds] = useState(Array(2).fill(""));
-  const [placeNames, setPlaceNames] = useState(Array(2).fill(""));
+  const [placeNames, setPlaceNames] = useState(Array(1).fill(""));
   const [markerLatLng, setMarkerLatLng] = useState([
     { lat: 40.7128, lng: -74.006 },
-    { lat: 40.7128, lng: -74.008 },
   ]);
+  const [draggablePlace, setDraggablePlace] = useState({
+    lat: 40.7128,
+    lng: -74.006,
+  });
   useEffect(() => {
     async function initMap() {
       let { map, AdvancedMarkerElement } = await mapDeclare(astor);
@@ -26,34 +30,39 @@ const AutoComplete = () => {
       );
       autoCompleteDeclare(
         map,
+        infoWindow,
         placeNames,
         setPlaceNames,
         inputs,
         markerLatLng,
-        setMarkerLatLng
+        setMarkerLatLng,
+        setAstor
       );
-      markerLatLng.forEach((item) => {
-        const draggableMarker = new AdvancedMarkerElement({
-          map,
-          position: item,
-          gmpDraggable: true,
-          title: "This marker is draggable.",
-        });
-        //   draggableMarker.setPosition(astor);
-        draggableMarker.addListener("dragend", (event: any) => {
-          infoWindow.close();
-        });
-      });
+      markerDraggable(
+        markerLatLng,
+        map,
+        infoWindow,
+        AdvancedMarkerElement,
+        placeNames,
+        setPlaceNames,
+        setDraggablePlace
+      );
+      //  marker dragable for place and route cahnging system
     }
     window.initMap = initMap;
     if (typeof google !== "undefined") {
       initMap();
     }
-  }, [astor, placeIds, placeNames, add, markerLatLng]);
-
+  }, [astor, placeIds, placeNames, add, markerLatLng, setDraggablePlace]);
+  console.log(placeNames, "placeNames");
+  const havesine = haversine.haversineDistance(
+    [-0.116773, 51.510357],
+    [-77.009003, 38.889931]
+  );
+  console.log(havesine, "havesine");
   return (
     <div className="container mx-auto">
-      <div id="map" className="w-[300px] h-[400px]  "></div>
+      <div id="map" className="  h-[400px]  "></div>
       <div className="flex w-full justify-between gap-3">
         <div className="w-full">
           {Array.from({ length: add }).map((_, index) => (
@@ -74,7 +83,7 @@ const AutoComplete = () => {
           + Add{" "}
         </button>
       </div>
-      <div className="flex flex-col ">
+      <div className="flex flex-col my-5">
         {placeNames.map((item, index) => (
           <span key={index}>Name : {item}</span>
         ))}

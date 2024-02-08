@@ -2,7 +2,6 @@ import { markerData } from "./../marker/data";
 export async function markerCustom(
   AdvanceElement: any,
   map: any,
-
   PinElement: any,
   infoWindow: any
 ) {
@@ -45,6 +44,5 @@ export async function markerCustom(
     strokeOpacity: 0.8,
     strokeWeight: 2,
   });
-
   polyline.setMap(map);
 }
