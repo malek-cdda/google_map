@@ -29,7 +29,9 @@ const AutoCompleteField = ({
       let { map, AdvancedMarkerElement } = await mapDeclare(astor);
       const { infoWindow } = await infoWindowDeclare(map);
       const { marker } = await markerDeclare(map);
-      autoCompleteDeclare(marker, map, infoWindow, setAstor, setPlaceId);
+      const input = document.getElementById("pac-input") as HTMLInputElement;
+      console.log(input, "input");
+      autoCompleteDeclare(marker, map, infoWindow, setAstor, setPlaceId, input);
       // streetView && streetViewDeclare(map, infoWindow, setError);
       map.addListener("click", (e: any) => {
         setAstor({
@@ -46,7 +48,8 @@ const AutoCompleteField = ({
           setPlaceId,
           setAstor,
           astor,
-          setPlaceName
+          setPlaceName,
+          input
         );
 
       // view sreet for using this function you have to make streetView true
@@ -96,6 +99,7 @@ const AutoCompleteField = ({
       fetch(`/api/placeapi?placeId=${placeId}`)
         .then((response) => response.json())
         .then((data) => {
+          console.log(data);
           setPlaceData(data.result.result);
         });
     }
@@ -205,7 +209,7 @@ const AutoCompleteField = ({
             type="text"
             placeholder="Search Google Maps"
             onChange={(e) => {}}
-            value={placeName || ""}
+            // value={placeName || ""}
           />
         )}
       </div>

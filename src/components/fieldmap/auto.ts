@@ -5,9 +5,9 @@ export async function autoCompleteDeclare(
   map: any,
   infoWindow: any,
   setAstor: any,
-  setPlaceId: any
+  setPlaceId: any,
+  input: any
 ) {
-  const input = document.getElementById("pac-input") as HTMLInputElement;
   const options = {
     fields: ["address_components", "geometry", "icon", "name", "place_id"],
     strictBounds: false,

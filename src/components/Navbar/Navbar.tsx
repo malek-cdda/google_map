@@ -34,6 +34,10 @@ const Navbar = () => {
       name: "View Street Marker",
       path: "/view",
     },
+    {
+      name: "Multiple Search",
+      path: "/multipleSearch",
+    },
   ];
   return (
     <div>
@@ -42,7 +46,7 @@ const Navbar = () => {
           <Link
             key={index}
             href={item.path}
-            className={`hover:underline hover:bg-blue-300 rounded-lg px-5 py-2 text-indigo-600 text-lg font-bold mx-2 ${
+            className={`text-[16px] hover:underline hover:bg-blue-300 rounded-lg px-5 py-2 text-indigo-600   font-bold mx-2 ${
               pathName === item.path ? "bg-blue-300" : ""
             }`}>
             {item.name}
