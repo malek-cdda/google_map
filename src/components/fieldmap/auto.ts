@@ -9,7 +9,14 @@ export async function autoCompleteDeclare(
   input: any
 ) {
   const options = {
-    fields: ["address_components", "geometry", "icon", "name", "place_id"],
+    fields: [
+      "address_components",
+      "geometry",
+      "icon",
+      "name",
+      "place_id",
+      "formatted_address",
+    ],
     strictBounds: false,
   };
   // find place library  = autcomplete
@@ -28,7 +35,7 @@ export async function autoCompleteDeclare(
     // console.log(place?.geometry?.location?.lat());
     marker.setPosition(place.geometry.location);
     map.setCenter(place.geometry.location);
-    infoWindow.setContent(place?.name);
+    infoWindow.setContent(place?.formatted_address);
     infoWindow.setPosition(place.geometry.location);
     infoWindow.open(map);
     setAstor({ lat: map.getCenter().lat(), lng: map.getCenter().lng() });

@@ -25,7 +25,6 @@ const AutoCompleteField = ({
   const [placeId, setPlaceId] = useState("");
   const [placeName, setPlaceName] = useState("");
 
-
   useEffect(() => {
     async function initMap() {
       let { map, AdvancedMarkerElement } = await mapDeclare(astor);
@@ -103,13 +102,11 @@ const AutoCompleteField = ({
         .then((data) => {
           console.log(data);
           setPlaceData(data.result.result);
-          console.log(data, "placeData effect")
+          console.log(data, "placeData effect");
         });
     }
     placeFetch();
   }, [placeId]);
-
-
 
   return (
     <div className="container mx-auto">
@@ -214,11 +211,7 @@ const AutoCompleteField = ({
             type="text"
             placeholder="Search Google Maps"
             onChange={(e) => {}}
-<<<<<<< HEAD
             // value={placeName || ""}
-=======
-            defaultValue={placeName || ""}
->>>>>>> origin/master
           />
         )}
       </div>

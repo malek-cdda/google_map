@@ -12,62 +12,48 @@ const AutoComplete = () => {
   const [astor, setAstor] = useState({ lat: 40.7128, lng: -74.006 });
   const [placeIds, setPlaceIds] = useState(Array(2).fill(""));
   const [placeNames, setPlaceNames] = useState(Array(2).fill(""));
-
+  const [markerLatLng, setMarkerLatLng] = useState([
+    { lat: 40.7128, lng: -74.006 },
+    { lat: 40.7128, lng: -74.008 },
+  ]);
   useEffect(() => {
     async function initMap() {
       let { map, AdvancedMarkerElement } = await mapDeclare(astor);
       const { infoWindow } = await infoWindowDeclare(map);
       const { marker } = await markerDeclare(map);
-
       const inputs = Array.from({ length: add }, (_, i) =>
         document.getElementById(`multiple_inputs-${i}`)
       );
-      //   autoCompleteDeclare(marker, map, infoWindow, setAstor, setPlaceId, input);
-      async function autoCompleteDeclare(inputs: any) {
-        const options = {
-          fields: [
-            "address_components",
-            "geometry",
-            "icon",
-            "name",
-            "place_id",
-            "formatted_address",
-          ],
-          strictBounds: false,
-        };
-
-        inputs.forEach((input: any, index: any) => {
-          const autocomplete = new google.maps.places.Autocomplete(
-            input,
-            options
-          );
-          autocomplete.bindTo("bounds", map);
-          autocomplete.addListener("place_changed", () => {
-            const place = autocomplete.getPlace();
-            console.log(place);
-            if (!place.geometry || !place.geometry.location) {
-              return;
-            }
-            const newPlaceIds = [...placeIds];
-            const newPlaceNames = [...placeNames];
-            newPlaceIds[index] = place.place_id;
-            newPlaceNames[index] = place?.formatted_address;
-            setPlaceIds(newPlaceIds);
-            setPlaceNames(newPlaceNames);
-          });
+      autoCompleteDeclare(
+        map,
+        placeNames,
+        setPlaceNames,
+        inputs,
+        markerLatLng,
+        setMarkerLatLng
+      );
+      markerLatLng.forEach((item) => {
+        const draggableMarker = new AdvancedMarkerElement({
+          map,
+          position: item,
+          gmpDraggable: true,
+          title: "This marker is draggable.",
         });
-      }
-      autoCompleteDeclare(inputs);
+        //   draggableMarker.setPosition(astor);
+        draggableMarker.addListener("dragend", (event: any) => {
+          infoWindow.close();
+        });
+      });
     }
     window.initMap = initMap;
     if (typeof google !== "undefined") {
       initMap();
     }
-  }, [astor, placeIds, placeNames, add]);
-  console.log(placeIds, placeNames, "placeIds");
+  }, [astor, placeIds, placeNames, add, markerLatLng]);
+
   return (
     <div className="container mx-auto">
-      <div id="map" className="w-[300px] h-[400px] hidden"></div>
+      <div id="map" className="w-[300px] h-[400px]  "></div>
       <div className="flex w-full justify-between gap-3">
         <div className="w-full">
           {Array.from({ length: add }).map((_, index) => (
@@ -87,6 +73,11 @@ const AutoComplete = () => {
           }}>
           + Add{" "}
         </button>
+      </div>
+      <div className="flex flex-col ">
+        {placeNames.map((item, index) => (
+          <span key={index}>Name : {item}</span>
+        ))}
       </div>
     </div>
   );

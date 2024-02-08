@@ -1,38 +1,49 @@
 export async function autoCompleteDeclare(
-  markers: any[],
+  //   markers: any[],
   map: any,
-  infoWindows: any[],
-  setAstors: any[],
-  setPlaceIds: any[],
-  inputs: any[]
+
+  newPlaceNames: any[],
+  setPlaceNames: any,
+  inputs: any[],
+  markerLatLng: any[],
+  setMarkerLatLng: any
 ) {
   const options = {
-    fields: ["address_components", "geometry", "icon", "name", "place_id"],
+    fields: [
+      "address_components",
+      "geometry",
+      "icon",
+      "name",
+      "place_id",
+      "formatted_address",
+    ],
     strictBounds: false,
   };
 
-  // Loop through each input field
-  inputs.forEach((input, index) => {
-    // find place library  = autcomplete
+  inputs?.forEach((input: any, index: any) => {
     const autocomplete = new google.maps.places.Autocomplete(input, options);
     autocomplete.bindTo("bounds", map);
     autocomplete.addListener("place_changed", () => {
-      const place = autocomplete.getPlace();
+      const place: any = autocomplete.getPlace();
       console.log(place);
-      //   setPlaceIds(index, place?.place_id);
       if (!place.geometry || !place.geometry.location) {
-        // User entered the name of a Place that was not suggested and
-        // pressed the Enter key, or the Place Details request failed.
-        // window.alert("No details available for input: " + place.name + "'");
         return;
       }
-      // console.log(place?.geometry?.location?.lat());
-      markers[index].setPosition(place.geometry.location);
-      map.setCenter(place.geometry.location);
-      infoWindows[index].setContent(place?.name);
-      infoWindows[index].setPosition(place.geometry.location);
-      infoWindows[index].open(map);
-      //   setAstors(index, { lat: map.getCenter().lat(), lng: map.getCenter().lng() });
+      //   const newPlaceIds = [...placeIds];
+      //   const newPlaceNames = [...placeNames];
+      //   newPlaceIds[index] = place.place_id;
+      console.log(place.geometry.location.lat(), place.geometry.location.lng());
+      setMarkerLatLng((prev: any) => {
+        const newMarkerLatLng = [...prev];
+        newMarkerLatLng[index] = {
+          lat: place.geometry.location.lat(),
+          lng: place.geometry.location.lng(),
+        };
+        return newMarkerLatLng;
+      });
+      newPlaceNames[index] = place?.formatted_address;
+      //   setPlaceIds(newPlaceIds);
+      setPlaceNames(newPlaceNames);
     });
   });
 }
