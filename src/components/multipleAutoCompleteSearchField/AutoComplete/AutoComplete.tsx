@@ -3,7 +3,7 @@ import {
   mapDeclare,
   markerDeclare,
 } from "@/components/mapFunction/map";
-import React, { useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { autoCompleteDeclare, markerDraggable } from "../autoComplete";
 import { haversine } from "@/components/haversine/Haversine";
 
@@ -22,7 +22,7 @@ const AutoComplete = () => {
   });
   useEffect(() => {
     async function initMap() {
-      let { map, AdvancedMarkerElement } = await mapDeclare(astor);
+      let { map, AdvancedMarkerElement, PinElement } = await mapDeclare(astor);
       const { infoWindow } = await infoWindowDeclare(map);
       const { marker } = await markerDeclare(map);
       const inputs = Array.from({ length: add }, (_, i) =>
@@ -39,8 +39,10 @@ const AutoComplete = () => {
         setAstor
       );
       markerDraggable(
+        setMarkerLatLng,
         markerLatLng,
         map,
+        PinElement,
         infoWindow,
         AdvancedMarkerElement,
         placeNames,
@@ -92,4 +94,4 @@ const AutoComplete = () => {
   );
 };
 
-export default AutoComplete;
+export default memo(AutoComplete);

@@ -56,8 +56,10 @@ export async function autoCompleteDeclare(
 }
 // ?!marker draggable for place and route changing system function
 export function markerDraggable(
+  setMarkerLatLng: any,
   markerLatLng: any[],
   map: any,
+  pinElement: any,
   infoWindow: any,
   AdvancedMarkerElement: any,
   newPlaceNames: any[],
@@ -66,16 +68,33 @@ export function markerDraggable(
 ) {
   const polylineCoordinates = markerLatLng.map((item, index) => {
     console.log(index, "index");
+    // pinelement change marker design
+    const pinScaled = new pinElement({
+      scale: 1.5,
+      glyph: `${index}`,
+      glyphColor: "black",
+      background: "green",
+    });
+    // AdvancedMarkerElement give me draggable marker
     const draggableMarker = new AdvancedMarkerElement({
       map,
       position: item,
       gmpDraggable: true,
       title: "This marker is draggable.",
+      content: pinScaled?.element,
     });
     //   draggableMarker.setPosition(astor);
     draggableMarker.addListener("dragend", (event: any) => {
       //   console.log(event.latLng.lat(), event.latLng.lng());
       //   console.log(index, "index of marker");
+      setMarkerLatLng((prev: any) => {
+        const newMarkerLatLng = [...prev];
+        newMarkerLatLng[index] = {
+          lat: event.latLng.lat(),
+          lng: event.latLng.lng(),
+        };
+        return newMarkerLatLng;
+      });
       getCodingForPlaceChange(
         {
           lat: event.latLng.lat(),
