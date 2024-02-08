@@ -10,3 +10,11 @@
 .ee {
   background-color: red !important;
 }
+
+/* Custom CSS styles for marker container elements */
+.gm-style .gm-style-iw {
+  background-color: #f1f1f1 !important; /* Set background color */
+  border: 2px solid #000000 !important; /* Set border color and thickness */
+  padding: 10px; /* Add padding */
+  border-radius: 5px; /* Add border radius */
+}
