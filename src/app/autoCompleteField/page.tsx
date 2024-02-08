@@ -8,19 +8,17 @@ const Home = () => {
   const [autoCompleteFieldToggle, setAutoCompleteFieldToggle] = useState(true);
   const [markerToggle, setMarkerToggle] = useState(true);
   return (
-    <div>
-      <AutoCompleteField
-        autoComplete={true}
-        streetView={streetView}
-        setStreetView={setStreetView}
-        mapView={mapView}
-        setMapView={setMapView}
-        autoCompleteFieldToggle={autoCompleteFieldToggle}
-        setAutoCompleteFieldToggle={setAutoCompleteFieldToggle}
-        setMarkerToggle={setMarkerToggle}
-        markerToggle={markerToggle}
-      />
-    </div>
+    <AutoCompleteField
+      autoComplete={true}
+      streetView={streetView}
+      setStreetView={setStreetView}
+      mapView={mapView}
+      setMapView={setMapView}
+      autoCompleteFieldToggle={autoCompleteFieldToggle}
+      setAutoCompleteFieldToggle={setAutoCompleteFieldToggle}
+      setMarkerToggle={setMarkerToggle}
+      markerToggle={markerToggle}
+    />
   );
 };
 
