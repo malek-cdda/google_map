@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import {
   infoWindowDeclare,
   mapDeclare,
@@ -7,7 +7,7 @@ import {
 } from "@/components/mapFunction/map";
 import { autoCompleteDeclare } from "@/components/fieldmap/auto";
 import { AutoCompletePage } from "./AutoFullAddress";
-import { dragAble, getCodingForPlaceId } from "./autoCompleteFunction";
+import { dragAble } from "./autoCompleteFunction";
 
 const AutoCompleteField = ({
   autoComplete = true,
@@ -24,6 +24,8 @@ const AutoCompleteField = ({
   let [astor, setAstor] = useState({ lat: 40.7128, lng: -74.006 });
   const [placeId, setPlaceId] = useState("");
   const [placeName, setPlaceName] = useState("");
+
+
   useEffect(() => {
     async function initMap() {
       let { map, AdvancedMarkerElement } = await mapDeclare(astor);
@@ -101,11 +103,14 @@ const AutoCompleteField = ({
         .then((data) => {
           console.log(data);
           setPlaceData(data.result.result);
+          console.log(data, "placeData effect")
         });
     }
     placeFetch();
   }, [placeId]);
-  console.log(placeName, "placeName");
+
+
+
   return (
     <div className="container mx-auto">
       <div id="control"></div>
@@ -209,7 +214,11 @@ const AutoCompleteField = ({
             type="text"
             placeholder="Search Google Maps"
             onChange={(e) => {}}
+<<<<<<< HEAD
             // value={placeName || ""}
+=======
+            defaultValue={placeName || ""}
+>>>>>>> origin/master
           />
         )}
       </div>
@@ -220,4 +229,4 @@ const AutoCompleteField = ({
     </div>
   );
 };
-export default AutoCompleteField;
+export default memo(AutoCompleteField);
