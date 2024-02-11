@@ -24,15 +24,22 @@ const AutoCompleteField = ({
   let [astor, setAstor] = useState({ lat: 40.7128, lng: -74.006 });
   const [placeId, setPlaceId] = useState("");
   const [placeName, setPlaceName] = useState("");
+  const [placeData, setPlaceData] = useState<any>({});
 
   useEffect(() => {
     async function initMap() {
       let { map, AdvancedMarkerElement } = await mapDeclare(astor);
       const { infoWindow } = await infoWindowDeclare(map);
       const { marker } = await markerDeclare(map);
-      const input = document.getElementById("pac-input") as HTMLInputElement;
-      console.log(input, "input");
-      autoCompleteDeclare(marker, map, infoWindow, setAstor, setPlaceId, input);
+      const input = document.querySelector<HTMLInputElement>(".pac-input");
+      autoCompleteDeclare(
+        marker,
+        map,
+        infoWindow,
+        setAstor,
+        setPlaceData,
+        input
+      );
       // streetView && streetViewDeclare(map, infoWindow, setError);
       map.addListener("click", (e: any) => {
         setAstor({
@@ -46,7 +53,7 @@ const AutoCompleteField = ({
           map,
           infoWindow,
           AdvancedMarkerElement,
-          setPlaceId,
+          setPlaceData,
           setAstor,
           astor,
           setPlaceName,
@@ -66,7 +73,6 @@ const AutoCompleteField = ({
           controlSize: 0,
         }
       );
-
       panorama.addListener("position_changed", (e: any) => {
         const panoramaPosition = panorama.getPosition();
       });
@@ -90,24 +96,18 @@ const AutoCompleteField = ({
       initMap();
     }
   }, [streetView, autoComplete, error, astor, markerToggle]);
-  const [placeData, setPlaceData] = useState<any>({});
 
   const handleStreetView = (e: any) => {
     setStreetView(!streetView);
   };
   useEffect(() => {
-    async function placeFetch() {
-      fetch(`/api/placeapi?placeId=${placeId}`)
-        .then((response) => response.json())
-        .then((data) => {
-          console.log(data);
-          setPlaceData(data.result.result);
-          console.log(data, "placeData effect");
-        });
+    if (placeData?.formatted_address) {
+      const inputValue = document.getElementById(
+        "pac-input"
+      ) as HTMLInputElement;
+      inputValue.value = placeData?.formatted_address;
     }
-    placeFetch();
-  }, [placeId]);
-
+  }, [placeData?.formatted_address]);
   return (
     <div className="container mx-auto">
       <div id="control"></div>
@@ -207,7 +207,7 @@ const AutoCompleteField = ({
         {autoComplete && (
           <input
             id="pac-input"
-            className=" border    z-50 py-2 px-4 rounded-full  outline-none placeholder:text-black focus:rounded-b-none focus:rounded-t-2xl  2  w-full "
+            className=" pac-input border    z-50 py-2 px-4 rounded-full  outline-none placeholder:text-black focus:rounded-b-none focus:rounded-t-2xl  2  w-full "
             type="text"
             placeholder="Search Google Maps"
             onChange={(e) => {}}
@@ -216,7 +216,9 @@ const AutoCompleteField = ({
         )}
       </div>
       <div className="container mx-auto">
-        {autoCompleteFieldToggle && <AutoCompletePage placeData={placeData} />}
+        {placeData?.formatted_address && (
+          <AutoCompletePage placeData={placeData} />
+        )}
       </div>
       <div className="py-5   container mx-auto px-2 my-2 rounded-md grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 grid-cols-1 gap-2"></div>
     </div>

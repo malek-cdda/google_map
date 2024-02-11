@@ -2,7 +2,11 @@ import MultipleAutoCompleteSearchField from "@/components/multipleAutoCompleteSe
 import React from "react";
 
 const Home = () => {
-  return <MultipleAutoCompleteSearchField />;
+  return (
+    <>
+      <MultipleAutoCompleteSearchField />
+    </>
+  );
 };
 
 export default Home;

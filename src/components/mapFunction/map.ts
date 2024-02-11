@@ -8,11 +8,12 @@ export async function mapDeclare(params: any) {
     disableDefaultUI: true,
     minZoom: 2,
   });
-  let { AdvancedMarkerElement, PinElement } = (await google.maps.importLibrary(
+  let marker = (await google.maps.importLibrary(
     "marker"
   )) as google.maps.MarkerLibrary;
+  let { PinElement, AdvancedMarkerElement } = marker;
 
-  return { map, PinElement, AdvancedMarkerElement };
+  return { map, PinElement, AdvancedMarkerElement, marker };
 }
 // marker decalre marker return promise so we can recieve value use async await
 export async function markerDeclare(params: any) {

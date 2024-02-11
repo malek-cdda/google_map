@@ -2,13 +2,11 @@ export function dragAble(
   map: any,
   infoWindow: any,
   AdvancedMarkerElement: any,
-  setPlaceId: any,
+  setPlaceData: any,
   setAstor: any,
   astor: any,
-  setPlaceName: any,
   input: any
 ) {
-  console.log(astor);
   const draggableMarker = new AdvancedMarkerElement({
     map,
     position: astor,
@@ -21,7 +19,7 @@ export function dragAble(
     const lats: any = event?.latLng?.lat();
     const lngs: any = event?.latLng?.lng();
     let position = { lat: lats, lng: lngs };
-    getCodingForPlaceId(position, setPlaceId, setAstor, setPlaceName, input);
+    getCodingForPlaceId(position, setPlaceData, setAstor, input);
     //   streetView(map, pro, setProduct);
     infoWindow.close();
   });
@@ -29,17 +27,25 @@ export function dragAble(
 
 export function getCodingForPlaceId(
   position: any,
-  setPlaceId: any,
+  setPlaceData: any,
   setAstor: any,
-  setPlaceName: any,
+
   input: any
 ) {
   var geocoder = new google.maps.Geocoder();
   geocoder.geocode({ location: position }, function (results: any, status) {
     if (status === google.maps.GeocoderStatus.OK) {
-      input.setAttribute("value", results[0]?.formatted_address);
-      setPlaceName(results[0]?.formatted_address);
-      setPlaceId(results[0]?.place_id);
+      // input.setAttribute("value", results[0]?.formatted_address);
+      console.log();
+
+      setPlaceData({
+        address: results[0]?.address_components,
+        formatted_address: results[0]?.formatted_address,
+        position: {
+          lat: results[0]?.geometry?.location.lat(),
+          lng: results[0]?.geometry?.location.lng(),
+        },
+      });
       setAstor(position);
     } else {
       window.alert("Geocoder failed due to: " + status);

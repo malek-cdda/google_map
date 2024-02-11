@@ -5,7 +5,7 @@ export async function autoCompleteDeclare(
   map: any,
   infoWindow: any,
   setAstor: any,
-  setPlaceId: any,
+  setPlaceData: any,
   input: any
 ) {
   const options = {
@@ -24,8 +24,15 @@ export async function autoCompleteDeclare(
   autocomplete.bindTo("bounds", map);
   autocomplete.addListener("place_changed", () => {
     const place = autocomplete.getPlace();
-    console.log(place);
-    setPlaceId(place?.place_id);
+
+    setPlaceData({
+      address: place?.address_components,
+      formatted_address: place?.formatted_address,
+      position: {
+        lat: place?.geometry?.location?.lat() ?? null,
+        lng: place?.geometry?.location?.lng() ?? null,
+      },
+    });
     if (!place.geometry || !place.geometry.location) {
       // User entered the name of a Place that was not suggested and
       // pressed the Enter key, or the Place Details request failed.

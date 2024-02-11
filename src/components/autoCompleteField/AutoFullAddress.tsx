@@ -14,7 +14,7 @@ export const AutoCompletePage = ({ placeData }: any) => {
     function addressData() {
       // formatting address set function
       async function placeFetch(value: any) {
-        return placeData?.address_components?.filter((item: any) =>
+        return placeData?.address?.filter((item: any) =>
           item?.types?.includes(value)
         );
       }
@@ -32,12 +32,12 @@ export const AutoCompletePage = ({ placeData }: any) => {
       }
       setPlaceAddress(placeData);
     }
-    placeData?.name && addressData();
+    placeData?.formatted_address && addressData();
   }, [placeData]);
-
+  console.log(placeData, "placedaata page");
   return (
     <div>
-      {placeData?.name && (
+      {
         <div className="mt-1 flex justify-between flex-wrap">
           <div className="flex w-full gap-5">
             {addressField?.apt?.length ? (
@@ -88,11 +88,11 @@ export const AutoCompletePage = ({ placeData }: any) => {
             )}
           </div>
           <div className="flex w-full gap-5">
-            <Label item={placeData?.geometry?.location?.lat} name="Latitude" />
-            <Label item={placeData?.geometry?.location?.lng} name="Longitude" />
+            <Label item={placeData?.position?.lat} name="Latitude" />
+            <Label item={placeData?.position?.lng} name="Longitude" />
           </div>
         </div>
-      )}
+      }
     </div>
   );
 };

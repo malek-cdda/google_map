@@ -20,7 +20,14 @@ export const AutoComplete = ({ apiKey = "", autoComplete = false }: any) => {
       const { infoWindow } = await infoWindowDeclare(map);
       const { marker } = await markerDeclare(map);
       autoComplete &&
-        autoCompleteDeclare(marker, map, infoWindow, setAstor, setPlaceId);
+        autoCompleteDeclare(
+          marker,
+          map,
+          infoWindow,
+          setAstor,
+          setPlaceId,
+          apiKey
+        );
       // streetView && streetViewDeclare(map, infoWindow, setError);
       map.addListener("click", (e: any) => {
         setAstor({

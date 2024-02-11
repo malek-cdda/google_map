@@ -55,72 +55,82 @@ export async function autoCompleteDeclare(
   });
 }
 // ?!marker draggable for place and route changing system function
-export function markerDraggable(
+export async function markerDraggable(
   setMarkerLatLng: any,
   markerLatLng: any[],
   map: any,
-  pinElement: any,
-  infoWindow: any,
+  PinElement: any,
   AdvancedMarkerElement: any,
+  infoWindow: any,
   newPlaceNames: any[],
   setPlaceNames: any,
   setDraggablePlace: any
 ) {
-  const polylineCoordinates = markerLatLng.map((item, index) => {
-    console.log(index, "index");
-    // pinelement change marker design
-    const pinScaled =
-      pinElement &&
-      new pinElement({
-        scale: 1.5,
-        glyph: `${index}`,
-        glyphColor: "black",
-        background: "green",
+  const polylineCoordinates =
+    markerLatLng &&
+    markerLatLng.map((item, index) => {
+      const pinScaled =
+        PinElement &&
+        new PinElement({
+          scale: 1.5,
+          glyph: `${index}`,
+          glyphColor: "black",
+          background: "green",
+        });
+      console.log(pinScaled, "pinScaled");
+      const draggableMarker =
+        map &&
+        AdvancedMarkerElement &&
+        new AdvancedMarkerElement({
+          map,
+          position: item,
+          gmpDraggable: true,
+          title: "This marker is draggable.",
+          content: pinScaled?.element,
+        });
+      draggableMarker?.addListener("dragend", (event: any) => {
+        setMarkerLatLng((prev: any) => {
+          const newMarkerLatLng = [...prev];
+          newMarkerLatLng[index] = {
+            lat: event.latLng.lat(),
+            lng: event.latLng.lng(),
+          };
+          return newMarkerLatLng;
+        });
+
+        infoWindow.close();
       });
-    // AdvancedMarkerElement give me draggable marker
-    const draggableMarker =
-      AdvancedMarkerElement &&
-      new AdvancedMarkerElement({
-        map,
-        position: item,
-        gmpDraggable: true,
-        title: "This marker is draggable.",
-        content: pinScaled?.element,
-      });
-    //   draggableMarker.setPosition(astor);
-    draggableMarker?.addListener("dragend", (event: any) => {
-      //   console.log(event.latLng.lat(), event.latLng.lng());
-      //   console.log(index, "index of marker");
-      setMarkerLatLng((prev: any) => {
-        const newMarkerLatLng = [...prev];
-        newMarkerLatLng[index] = {
-          lat: event.latLng.lat(),
-          lng: event.latLng.lng(),
-        };
-        return newMarkerLatLng;
-      });
-      getCodingForPlaceChange(
-        {
-          lat: event.latLng.lat(),
-          lng: event.latLng.lng(),
-        },
-        index,
-        newPlaceNames,
-        setPlaceNames,
-        setDraggablePlace
-      );
-      infoWindow.close();
+      // draggableMarker?.addListener("dragend", (event: any) => {
+      //   setMarkerLatLng((prev: any) => {
+      //     const newMarkerLatLng = [...prev];
+      //     newMarkerLatLng[index] = {
+      //       lat: event.latLng.lat(),
+      //       lng: event.latLng.lng(),
+      //     };
+      //     return newMarkerLatLng;
+      //   });
+      // getCodingForPlaceChange(
+      //   {
+      //     lat: event.latLng.lat(),
+      //     lng: event.latLng.lng(),
+      //   },
+      //   index,
+      //   newPlaceNames,
+      //   setPlaceNames,
+      //   setDraggablePlace
+      // );
+      // infoWindow.close();
     });
-    console.log(item, "item");
-    return new google.maps.LatLng(item?.lat, item?.lng);
-  });
-  const polyline = new google.maps.Polyline({
-    path: polylineCoordinates,
-    geodesic: true,
-    strokeColor: "green", // Line color
-    strokeOpacity: 0.8,
-    strokeWeight: 2,
-  });
+  // console.log(item, "item");
+  // return new google.maps.LatLng(item?.lat, item?.lng);
+  // });
+  // const polyline = new google.maps.Polyline({
+  //   path: polylineCoordinates,
+  //   geodesic: true,
+  //   strokeColor: "green", // Line color
+  //   strokeOpacity: 0.8,
+  //   strokeWeight: 2,
+  // });
   // polyline.setMap(map);
 }
 
@@ -157,16 +167,9 @@ export function getCodingForPlaceChange(
 
 // multiple direction service function
 
-export function directionCalculate() {
+export function directionCalculate(map: any, markerLatLng: any[]) {
   const directionsService = new google.maps.DirectionsService();
   const directionsRenderer = new google.maps.DirectionsRenderer();
-  const map = new google.maps.Map(
-    document.getElementById("map") as HTMLElement,
-    {
-      zoom: 6,
-      center: { lat: 41.85, lng: -87.65 },
-    }
-  );
 
   directionsRenderer.setMap(map);
 
