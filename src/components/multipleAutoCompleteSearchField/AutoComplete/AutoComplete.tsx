@@ -153,7 +153,6 @@ const AutoComplete = () => {
     function computeTotalDistance(result) {
       let total = 0;
       const myroute = result.routes[0];
-
       if (!myroute) {
         return;
       }

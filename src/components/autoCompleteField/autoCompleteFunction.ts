@@ -35,9 +35,6 @@ export function getCodingForPlaceId(
   var geocoder = new google.maps.Geocoder();
   geocoder.geocode({ location: position }, function (results: any, status) {
     if (status === google.maps.GeocoderStatus.OK) {
-      // input.setAttribute("value", results[0]?.formatted_address);
-      console.log();
-
       setPlaceData({
         address: results[0]?.address_components,
         formatted_address: results[0]?.formatted_address,

@@ -24,7 +24,7 @@ export async function autoCompleteDeclare(
   autocomplete.bindTo("bounds", map);
   autocomplete.addListener("place_changed", () => {
     const place = autocomplete.getPlace();
-
+    console.log(place, "place name");
     setPlaceData({
       address: place?.address_components,
       formatted_address: place?.formatted_address,

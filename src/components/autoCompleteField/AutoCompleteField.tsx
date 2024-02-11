@@ -22,8 +22,7 @@ const AutoCompleteField = ({
 }: any) => {
   const [error, setError] = useState(false);
   let [astor, setAstor] = useState({ lat: 40.7128, lng: -74.006 });
-  const [placeId, setPlaceId] = useState("");
-  const [placeName, setPlaceName] = useState("");
+
   const [placeData, setPlaceData] = useState<any>({});
 
   useEffect(() => {
@@ -41,12 +40,12 @@ const AutoCompleteField = ({
         input
       );
       // streetView && streetViewDeclare(map, infoWindow, setError);
-      map.addListener("click", (e: any) => {
-        setAstor({
-          lat: e.latLng?.lat() as number,
-          lng: e.latLng?.lng() as number,
-        });
-      });
+      // map.addListener("click", (e: any) => {
+      //   setAstor({
+      //     lat: e.latLng?.lat() as number,
+      //     lng: e.latLng?.lng() as number,
+      //   });
+      // });
       // dragble for place and route cahnging system
       markerToggle &&
         dragAble(
@@ -56,7 +55,6 @@ const AutoCompleteField = ({
           setPlaceData,
           setAstor,
           astor,
-          setPlaceName,
           input
         );
 
