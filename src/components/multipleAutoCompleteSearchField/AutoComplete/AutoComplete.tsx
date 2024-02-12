@@ -10,7 +10,6 @@ import { customScript } from "@/components/hooks/script";
 import { dragAble } from "@/components/autoCompleteField/autoCompleteFunction";
 
 const AutoComplete = () => {
-  const [add, setAdd] = useState<number>(1);
   const [astor, setAstor] = useState({ lat: 40.7128, lng: -74.006 });
   const [placeNames, setPlaceNames] = useState(Array(1).fill(""));
   const [placeName, setPlaceName] = useState<any>({});
@@ -24,27 +23,29 @@ const AutoComplete = () => {
   const [map, setMap] = useState<any>(null);
   const [marker, setMarker] = useState<any>(null);
   const [latLng, setLatLng] = useState<any>([]);
+  const [add, setAdd] = useState([0]);
   useEffect(() => {
     const script = customScript();
     script.onload = initializeMap;
     return () => {
       document.head.removeChild(script);
     };
-  }, []);
+    1;
+  }, [placeNames]);
   const initializeMap = async () => {
     const { map, marker } = await mapDeclare(astor);
-
     setMap(map);
     setMarker(marker);
   };
-
+  ["1", "2", "3"];
+  //  [1,0,2]
   // ?!autocomplete search place code function
   useEffect(() => {
     const handleAddedSearchField = async (
       placeNames: any,
       setPlaceNames: any
     ) => {
-      const data = Array.from({ length: add }).map((_, index) => {
+      const data = add.map((_, index) => {
         const input: any =
           document.getElementsByClassName("searchInput")[index];
         const autocomplete = new window.google.maps.places.Autocomplete(input);
@@ -87,10 +88,9 @@ const AutoComplete = () => {
     };
     // try to make a marker in the function
 
-    if (map && marker) {
+    if (map) {
       handleAddedSearchField(placeNames, setPlaceNames);
     }
-    localStorage.setItem("latLng", JSON.stringify(latLng));
   }, [map, add, placeNames, setPlaceNames, marker, latLng]);
 
   // ?! distance marker draggable for place and route changing system function
@@ -173,41 +173,83 @@ const AutoComplete = () => {
       displayDistance();
     }
   }, [placeNames, map]);
-  const handleDelete = (index: number) => {
-    const newPlaceNames = [...placeNames];
-    newPlaceNames.splice(index, 1);
-    setPlaceNames(newPlaceNames);
-    setAdd(add - 1);
-  };
+
+  // const [add, setAdd] = useState([1, 2]);
+
+  function dragStart(e, id) {
+    e.dataTransfer.setData("text/plain", id);
+  }
+
+  function dragEnter(e) {
+    e.preventDefault();
+  }
+
+  function dragOver(e) {
+    e.preventDefault();
+  }
+
+  function dragDrop(e: any, id: any) {
+    const draggedItemId = e.dataTransfer.getData("text/plain");
+    const draggedItem = add.find((item) => item == draggedItemId);
+    const droppedItem = add.find((item) => item == id);
+
+    const draggedItemIndex = add.indexOf(draggedItem);
+    const droppedItemIndex = add.indexOf(droppedItem);
+
+    let newList = [...add];
+    newList[draggedItemIndex] = droppedItem;
+    newList[droppedItemIndex] = draggedItem;
+    setAdd(newList);
+    const data = add.map((item, index) => {
+      return placeNames[item];
+    });
+    console.log(data);
+  }
+
   return (
     <div className="container mx-auto">
       {/* <div id="panel"></div> */}
       <div id="map" className="  h-[400px]  "></div>
-      <div className="flex w-full justify-between gap-3">
+      <div className="flex w-full justify-between gap-3 ">
         <div className="w-full">
-          {Array.from({ length: add }).map((_, index) => (
-            <div key={index} className="flex items-center ">
-              <input
-                id={`multi-${index}`}
-                className={`searchInput controls border-2 border-gray-500 w-full h-10 mb-2 rounded-full px-3 py-2`}
-                placeholder={`Search for place ${index + 1}`}
-                // className="controls border-2 border-gray-500 w-full h-10 mb-2 rounded-full px-3 py-2  "
-                type="text"
-              />
-              <button
-                className="bg-red-700 py-2 px-7 rounded-full text-white w-32 h-12 my-2 mx-2"
-                onClick={() => {
-                  handleDelete(index);
-                }}>
-                Delete
-              </button>
-            </div>
-          ))}
+          <div className="flex items-center flex-col w-full">
+            {add.map((item, index) => (
+              <div
+                key={item}
+                className="draggable w-full flex items-center"
+                draggable="true"
+                onDragStart={(e) => dragStart(e, item)}
+                onDragOver={dragOver}
+                onDragEnter={dragEnter}
+                onDrop={(e) => dragDrop(e, item)}>
+                <input
+                  id={`multi-${index}`}
+                  type="text"
+                  placeholder={"search for place" + String(item + 1)}
+                  className={`searchInput controls border-2 border-gray-500 w-full h-10 mb-2 rounded-full px-3 py-2 duration-300 ease-linear transform transition-all focus:rounded-none focus:rounded-t-xl  `}
+                />
+
+                <button
+                  className="bg-red-700 py-2 px-7 rounded-full text-white w-32 h-12 my-2 mx-2"
+                  onClick={() => {
+                    handleDelete(index);
+                  }}>
+                  Delete
+                </button>
+              </div>
+            ))}
+            <input
+              type="text"
+              placeholder={"search for place "}
+              className={`searchInput`}
+            />
+          </div>
         </div>
         <button
-          className="bg-blue-700 py-2 px-7 rounded-full text-white w-32 h-12"
+          className="bg-blue-700 py-2 px-7 rounded-full text-white w-32 h-12 my-2"
           onClick={(e) => {
-            setAdd(add + 1);
+            // setAdd(add + 1);
+            setAdd([...add, add.length]);
           }}>
           + Add{" "}
         </button>
