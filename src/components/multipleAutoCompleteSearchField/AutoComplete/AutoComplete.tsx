@@ -4,25 +4,18 @@ import {
   markerDeclare,
 } from "@/components/mapFunction/map";
 import React, { memo, use, useEffect, useState } from "react";
-import { autoCompleteDeclare, markerDraggable } from "../autoComplete";
-import { haversine } from "@/components/haversine/Haversine";
+import {
+  displayDistance,
+  dragDrop,
+  handleAddedSearchField,
+  handleDeleteSearchField,
+} from "../utils/utils";
 import { customScript } from "@/components/hooks/script";
-import { dragAble } from "@/components/autoCompleteField/autoCompleteFunction";
-
 const AutoComplete = () => {
   const [astor, setAstor] = useState({ lat: 40.7128, lng: -74.006 });
   const [placeNames, setPlaceNames] = useState(Array(1).fill(""));
-  const [placeName, setPlaceName] = useState<any>({});
-  const [markerLatLng, setMarkerLatLng] = useState([
-    { lat: 40.7128, lng: -74.006 },
-  ]);
-  const [draggablePlace, setDraggablePlace] = useState({
-    lat: 40.7128,
-    lng: -74.006,
-  });
   const [map, setMap] = useState<any>(null);
-  const [marker, setMarker] = useState<any>(null);
-  const [latLng, setLatLng] = useState<any>([]);
+
   const [add, setAdd] = useState([0]);
   useEffect(() => {
     const script = customScript();
@@ -32,180 +25,42 @@ const AutoComplete = () => {
     };
     1;
   }, [placeNames]);
+  // ?!initialize map function
   const initializeMap = async () => {
-    const { map, marker } = await mapDeclare(astor);
+    const { map } = await mapDeclare(astor);
     setMap(map);
-    setMarker(marker);
   };
-  ["1", "2", "3"];
-  //  [1,0,2]
   // ?!autocomplete search place code function
   useEffect(() => {
-    const handleAddedSearchField = async (
-      placeNames: any,
-      setPlaceNames: any
-    ) => {
-      const data = add.map((_, index) => {
-        const input: any =
-          document.getElementsByClassName("searchInput")[index];
-        const autocomplete = new window.google.maps.places.Autocomplete(input);
-        autocomplete.bindTo("bounds", map);
-        autocomplete.addListener("place_changed", async () => {
-          // marker.setVisible(false);
-          const place: any = autocomplete.getPlace();
-          // const { AdvancedMarkerElement, PinElement } = marker;
-          if (!place.geometry) {
-            window.alert(
-              "No details available for input: '" + place.name + "'"
-            );
-            return;
-          }
-          setLatLng((prev: any) => {
-            const newLatLng = [...prev];
-            newLatLng[index] = {
-              lat: place.geometry.location.lat() + 0.0018018,
-              lng: place.geometry.location.lng() + 0.0018018,
-            };
-            return newLatLng;
-          });
-
-          if (place.geometry.viewport) {
-            map.fitBounds(place.geometry.viewport);
-          } else {
-            map.setCenter(place.geometry.location);
-            map.setZoom(17);
-          }
-          const updatedPlaceNames = [...placeNames]; // Create a copy of placeNames
-          updatedPlaceNames[index] = place?.formatted_address;
-          setPlaceNames(updatedPlaceNames);
-          // displayDistance();
-        });
-        return placeNames[index];
-      });
-
-      return data;
-      // displayDistance();
-    };
     // try to make a marker in the function
-
     if (map) {
-      handleAddedSearchField(placeNames, setPlaceNames);
+      handleAddedSearchField(map, add, placeNames, setPlaceNames);
     }
-  }, [map, add, placeNames, setPlaceNames, marker, latLng]);
-
+  }, [map, add, placeNames, setPlaceNames]);
   // ?! distance marker draggable for place and route changing system function
-
-  function displayDistance() {
-    const directionsService = new google.maps.DirectionsService();
-    const panel = document.getElementById("panel") as HTMLElement;
-    const directionsRenderers: any = [];
-    const directionsRenderer = new google.maps.DirectionsRenderer({
-      draggable: false,
-      map,
-      panel: panel as HTMLElement,
-      // suppressMarkers: true,
-      markerOptions: {
-        draggable: false,
-      },
-      polylineOptions: {
-        strokeColor: "green",
-      },
-    });
-    const rendererId = "myRendererId";
-    directionsRenderers.push({
-      id: rendererId,
-      renderer: directionsRenderer,
-    });
-
-    directionsRenderer.addListener("directions_changed", () => {
-      const directions: any = directionsRenderer.getDirections();
-      if (directions) {
-        computeTotalDistance(directions);
-      }
-    });
-
-    displayRoute(
-      placeNames[0],
-      placeNames[placeNames?.length - 1],
-      directionsService,
-      directionsRenderer
-    );
-
-    function displayRoute(origin, destination, service, display) {
-      service
-        .route({
-          origin: origin,
-          destination: destination,
-          waypoints: placeNames
-            ?.slice(1, placeNames.length - 1)
-            .map((city) => ({ location: `${city}` })),
-          travelMode: google.maps.TravelMode.DRIVING,
-          avoidTolls: true,
-        })
-        .then((result) => {
-          display.setDirections(result);
-        })
-        .catch((e: any) => {
-          // alert("Could not display directions due to: " + e);
-        });
-    }
-
-    function computeTotalDistance(result) {
-      let total = 0;
-      const myroute = result.routes[0];
-      if (!myroute) {
-        return;
-      }
-      let value: any = [];
-      for (let i = 0; i < myroute.legs.length; i++) {
-        value.push({
-          distance: myroute.legs[i].distance.value / 1000,
-          place: placeNames[i + 1],
-        });
-        total += myroute.legs[i].distance.value;
-      }
-
-      total = total / 1000;
-    }
-  }
   useEffect(() => {
     if (map) {
-      displayDistance();
+      displayDistance(map, placeNames);
     }
   }, [placeNames, map]);
-
-  // const [add, setAdd] = useState([1, 2]);
-
-  function dragStart(e, id) {
+  // drag function code here
+  function dragStart(e: any, id: any) {
     e.dataTransfer.setData("text/plain", id);
   }
-
-  function dragEnter(e) {
+  function dragEnter(e: any) {
     e.preventDefault();
   }
-
-  function dragOver(e) {
+  function dragOver(e: any) {
     e.preventDefault();
   }
-
-  function dragDrop(e: any, id: any) {
-    const draggedItemId = e.dataTransfer.getData("text/plain");
-    const draggedItem = add.find((item) => item == draggedItemId);
-    const droppedItem = add.find((item) => item == id);
-
-    const draggedItemIndex = add.indexOf(draggedItem);
-    const droppedItemIndex = add.indexOf(droppedItem);
-
-    let newList = [...add];
-    newList[draggedItemIndex] = droppedItem;
-    newList[droppedItemIndex] = draggedItem;
-    setAdd(newList);
-    const data = add.map((item, index) => {
-      return placeNames[item];
-    });
-    console.log(data);
+  // ?!drag and drop function code here
+  function dragDrops(e: any, id: any) {
+    dragDrop(e, id, add, setAdd, placeNames, setPlaceNames);
   }
-
+  // ?!delete function code here
+  const handleDelete = (index: number) => {
+    handleDeleteSearchField(index, setPlaceNames, placeNames, setAdd, add);
+  };
   return (
     <div className="container mx-auto">
       {/* <div id="panel"></div> */}
@@ -221,7 +76,7 @@ const AutoComplete = () => {
                 onDragStart={(e) => dragStart(e, item)}
                 onDragOver={dragOver}
                 onDragEnter={dragEnter}
-                onDrop={(e) => dragDrop(e, item)}>
+                onDrop={(e) => dragDrops(e, item)}>
                 <input
                   id={`multi-${index}`}
                   type="text"
@@ -238,11 +93,6 @@ const AutoComplete = () => {
                 </button>
               </div>
             ))}
-            <input
-              type="text"
-              placeholder={"search for place "}
-              className={`searchInput`}
-            />
           </div>
         </div>
         <button
