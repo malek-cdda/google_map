@@ -66,12 +66,14 @@ const AutoComplete = () => {
   const handleDelete = (index: number) => {
     handleDeleteSearchField(index, setPlaceNames, placeNames, setAdd, add);
   };
-  useEffect(() => {
-    placeNames.map((item, index) => {
-      const routeValue = document.getElementById(`multi-${index}`) as any;
-      routeValue.value = item;
-    });
-  }, [placeNames, map]);
+  // useEffect(() => {
+  //   placeNames.map((item, index) => {
+  //     const routeValue = document.getElementById(`multi-${index}`) as any;
+
+  //     routeValue.value = item;
+  //   });
+  // }, [placeNames, map]);
+  console.log(placeNames, "placeNames");
   return (
     <div className="container mx-auto">
       {/* <div id="panel"></div> */}
@@ -93,11 +95,16 @@ const AutoComplete = () => {
                   type="text"
                   placeholder={"search for place" + String(item + 1)}
                   className={`searchInput controls border-2 border-gray-500 w-full h-10 mb-2 rounded-full px-3 py-2 duration-300 ease-linear transform transition-all focus:rounded-none focus:rounded-t-xl  `}
+                  // value={placeNames[index] || ""}
                   onFocus={(e) => {
                     setIndexNumber(item);
                   }}
+                  // onChange={(e) => {
+                  //   const updatePlaceName = [...placeNames];
+                  //   updatePlaceName[item] = e.target.value;
+                  //   // setPlaceNames(updatePlaceName);
+                  // }}
                 />
-
                 <button
                   className="bg-red-700 py-2 px-7 rounded-full text-white w-32 h-12 my-2 mx-2"
                   onClick={() => {
@@ -119,6 +126,7 @@ const AutoComplete = () => {
         </button>
       </div>
       <div className="flex flex-col my-5"></div>
+      <div id="log"></div>
     </div>
   );
 };

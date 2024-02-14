@@ -20,7 +20,9 @@ const NearBy = ({ apiKey = "", autoComplete = false }: any) => {
       let { map } = await mapDeclare(astor);
       const { infoWindow } = await infoWindowDeclare(map);
       const { marker } = await markerDeclare(map);
-      autoCompleteDeclare(marker, map, infoWindow, setAstor, setPlaceId);
+      const input = document.getElementById("pac-input") as HTMLInputElement;
+
+      autoCompleteDeclare(marker, map, infoWindow, setAstor, setPlaceId, input);
     }
     window.initMap = initMap;
     if (typeof google !== "undefined") {
@@ -91,7 +93,7 @@ const NearBy = ({ apiKey = "", autoComplete = false }: any) => {
     }
   }
   const haversine = new haversineFormula();
-
+  console.log(placeData, "placeData");
   return (
     <div className="container mx-auto">
       <div className="flex justify-center gap-10 ">

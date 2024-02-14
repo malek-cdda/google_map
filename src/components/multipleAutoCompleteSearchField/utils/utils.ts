@@ -12,12 +12,17 @@ export const handleAddedSearchField = async ({
   setPlaceNames: any;
   indexNumber: any;
 }) => {
+  console.log(indexNumber, "indexNumber");
   let autocompleteInstances: any[] = [];
+  // track id input field
+  const inputs = document.getElementsByClassName("searchInput") as any;
+
   add.map((_, index) => {
     const input = document.getElementsByClassName("searchInput")[
       index
     ] as HTMLInputElement;
     const autocomplete = new window.google.maps.places.Autocomplete(input);
+
     autocomplete.bindTo("bounds", map);
     autocompleteInstances.push(autocomplete);
   });
@@ -47,10 +52,16 @@ export const handleAddedSearchField = async ({
       console.log(indexNumber, "indexNumber");
       const updatedPlaceNames = [...placeNames]; // Create a copy of placeNames
       updatedPlaceNames[indexNumber] = data;
+      // document.getElementById(`multi-${indexNumber}`).value = data;
       setPlaceNames(updatedPlaceNames);
     });
   }
-  console.log(placeNames, "placeNames");
+  // placeNames.map((item, index) => {
+  //   const routeValue = document.getElementById(`multi-${index}`) as any;
+  //   console.log(item, "item");
+  //   console.log(document.querySelectorAll(".searchInput"), "searchInput");
+  //   routeValue.value = item;
+  // });
   return placeNames;
   // displayDistance();
 };
@@ -164,6 +175,12 @@ export function dragDrop(
   // value1.value = temp;
   const updatePlaceName = [...placeNames];
   setPlaceNames(updatePlaceName);
+  updatePlaceName.map((item, index) => {
+    const routeValue = document.getElementById(`multi-${index}`) as any;
+    console.log(item, "item");
+    console.log(document.querySelectorAll(".searchInput"), "searchInput");
+    routeValue.value = item;
+  });
 }
 // ?! delete any search field code here
 export const handleDeleteSearchField = (
