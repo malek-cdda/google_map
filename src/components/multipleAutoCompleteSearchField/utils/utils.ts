@@ -16,8 +16,9 @@ export const handleAddedSearchField = async ({
   let autocompleteInstances: any[] = [];
   // track id input field
   const inputs = document.getElementsByClassName("searchInput") as any;
-
-  add.map((_, index) => {
+  const newArray = Array.from({ length: add.length }, (_, index) => index);
+  console.log(newArray, "newArray");
+  Array.from({ length: add.length }).map((_, index) => {
     const input = document.getElementsByClassName("searchInput")[
       index
     ] as HTMLInputElement;
@@ -26,10 +27,10 @@ export const handleAddedSearchField = async ({
     autocomplete.bindTo("bounds", map);
     autocompleteInstances.push(autocomplete);
   });
-  async function autocompletePlace(input: any, index: any) {
+  async function autocompletePlace(i: any, index: any) {
     return new Promise((resolve, reject) => {
-      autocompleteInstances[index].addListener("place_changed", async () => {
-        const place = autocompleteInstances[index].getPlace();
+      autocompleteInstances[i].addListener("place_changed", async () => {
+        const place = autocompleteInstances[i].getPlace();
         if (!place.geometry) {
           return;
         }
@@ -47,11 +48,11 @@ export const handleAddedSearchField = async ({
   const inputFields = document.getElementsByClassName("searchInput");
   for (let i: number = 0; i < len; i++) {
     // autocompletePlace(input);
-    autocompletePlace(inputFields[i], i).then((data) => {
+    autocompletePlace(i, indexNumber).then((data) => {
       console.log(data, "data");
       console.log(indexNumber, "indexNumber");
       const updatedPlaceNames = [...placeNames]; // Create a copy of placeNames
-      updatedPlaceNames[indexNumber] = data;
+      updatedPlaceNames[newArray[i]] = data;
       // document.getElementById(`multi-${indexNumber}`).value = data;
       setPlaceNames(updatedPlaceNames);
     });
@@ -62,6 +63,11 @@ export const handleAddedSearchField = async ({
   //   console.log(document.querySelectorAll(".searchInput"), "searchInput");
   //   routeValue.value = item;
   // });
+  console.log(placeNames, "placeNames");
+  if (map) {
+    // ?! distance marker draggable for place and route changing system function
+    displayDistance(map, placeNames);
+  }
   return placeNames;
   // displayDistance();
 };
@@ -149,6 +155,7 @@ export function displayDistance(
 }
 // ?!drag and drop section code here and changing value here
 export function dragDrop(
+  map: any,
   e: any,
   id: any,
   add: any,
@@ -161,26 +168,23 @@ export function dragDrop(
   const droppedItem: any = add.find((item: any) => item == id);
   const draggedItemIndex = add.indexOf(draggedItem);
   const droppedItemIndex = add.indexOf(droppedItem);
+
+  // Update the order of input fields
   let newList = [...add];
   newList[draggedItemIndex] = droppedItem;
   newList[droppedItemIndex] = draggedItem;
   setAdd(newList);
-  const temp = placeNames[draggedItemIndex];
-  console.log(temp);
-  placeNames[draggedItemIndex] = placeNames[droppedItemIndex];
-  placeNames[droppedItemIndex] = temp;
-  let value1 = document.getElementById(`multi-${draggedItemIndex}`) as any;
-  let value2 = document.getElementById(`multi-${droppedItemIndex}`) as any;
-  // value2.value = placeNames[droppedItemIndex];
-  // value1.value = temp;
-  const updatePlaceName = [...placeNames];
-  setPlaceNames(updatePlaceName);
-  updatePlaceName.map((item, index) => {
-    const routeValue = document.getElementById(`multi-${index}`) as any;
-    console.log(item, "item");
-    console.log(document.querySelectorAll(".searchInput"), "searchInput");
-    routeValue.value = item;
-  });
+
+  // Update the order of placeNames
+  let newPlaceNames = [...placeNames];
+  const temp = newPlaceNames[draggedItemIndex];
+  newPlaceNames[draggedItemIndex] = newPlaceNames[droppedItemIndex];
+  newPlaceNames[droppedItemIndex] = temp;
+  setPlaceNames(newPlaceNames);
+  console.log(newPlaceNames, "newPlaceNames");
+  if (map) {
+    displayDistance(map, newPlaceNames);
+  }
 }
 // ?! delete any search field code here
 export const handleDeleteSearchField = (

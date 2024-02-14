@@ -42,12 +42,7 @@ const AutoComplete = () => {
       });
     }
   }, [map, add, placeNames, setPlaceNames, indexNumber]);
-  // ?! distance marker draggable for place and route changing system function
-  useEffect(() => {
-    if (map) {
-      displayDistance(map, placeNames);
-    }
-  }, [placeNames, map]);
+
   // drag function code here
   function dragStart(e: any, id: any) {
     e.dataTransfer.setData("text/plain", id);
@@ -60,7 +55,7 @@ const AutoComplete = () => {
   }
   // ?!drag and drop function code here
   function dragDrops(e: any, id: any) {
-    dragDrop(e, id, add, setAdd, placeNames, setPlaceNames);
+    dragDrop(map, e, id, add, setAdd, placeNames, setPlaceNames);
   }
   // ?!delete function code here
   const handleDelete = (index: number) => {
@@ -73,7 +68,7 @@ const AutoComplete = () => {
   //     routeValue.value = item;
   //   });
   // }, [placeNames, map]);
-  console.log(placeNames, "placeNames");
+
   return (
     <div className="container mx-auto">
       {/* <div id="panel"></div> */}

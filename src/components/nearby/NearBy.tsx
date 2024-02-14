@@ -93,7 +93,7 @@ const NearBy = ({ apiKey = "", autoComplete = false }: any) => {
     }
   }
   const haversine = new haversineFormula();
-  console.log(placeData, "placeData");
+
   return (
     <div className="container mx-auto">
       <div className="flex justify-center gap-10 ">
