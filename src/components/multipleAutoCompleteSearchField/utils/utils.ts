@@ -1,34 +1,57 @@
 //   ?!autocomplete search place code function
-export const handleAddedSearchField = async (
-  map: google.maps.Map,
-  add: number[],
-  placeNames: any,
-  setPlaceNames: any
-) => {
-  const data = add.map((_, index) => {
-    const input: any = document.getElementsByClassName("searchInput")[index];
+export const handleAddedSearchField = async ({
+  map,
+  add,
+  placeNames,
+  setPlaceNames,
+  indexNumber,
+}: {
+  map: google.maps.Map;
+  add: number[];
+  placeNames: any;
+  setPlaceNames: any;
+  indexNumber: any;
+}) => {
+  let autocompleteInstances: any[] = [];
+  add.map((_, index) => {
+    const input = document.getElementsByClassName("searchInput")[
+      index
+    ] as HTMLInputElement;
     const autocomplete = new window.google.maps.places.Autocomplete(input);
     autocomplete.bindTo("bounds", map);
-    autocomplete.addListener("place_changed", async () => {
-      const place: any = autocomplete.getPlace();
-      if (!place.geometry) {
-        return;
-      }
-      if (place.geometry.viewport) {
-        map.fitBounds(place.geometry.viewport);
-      } else {
-        map.setCenter(place.geometry.location);
-        map.setZoom(17);
-      }
-      const updatedPlaceNames = [...placeNames]; // Create a copy of placeNames
-      updatedPlaceNames[index] = place?.formatted_address;
-      setPlaceNames(updatedPlaceNames);
-      // displayDistance();
-    });
-    return placeNames[index];
+    autocompleteInstances.push(autocomplete);
   });
-
-  return data;
+  async function autocompletePlace(input: any, index: any) {
+    return new Promise((resolve, reject) => {
+      autocompleteInstances[index].addListener("place_changed", async () => {
+        const place = autocompleteInstances[index].getPlace();
+        if (!place.geometry) {
+          return;
+        }
+        if (place.geometry.viewport) {
+          map.fitBounds(place.geometry.viewport);
+        } else {
+          map.setCenter(place.geometry.location);
+          map.setZoom(17);
+        }
+        resolve(place?.formatted_address);
+      });
+    });
+  }
+  const len = document.getElementsByClassName("searchInput").length;
+  const inputFields = document.getElementsByClassName("searchInput");
+  for (let i: number = 0; i < len; i++) {
+    // autocompletePlace(input);
+    autocompletePlace(inputFields[i], i).then((data) => {
+      console.log(data, "data");
+      console.log(indexNumber, "indexNumber");
+      const updatedPlaceNames = [...placeNames]; // Create a copy of placeNames
+      updatedPlaceNames[indexNumber] = data;
+      setPlaceNames(updatedPlaceNames);
+    });
+  }
+  console.log(placeNames, "placeNames");
+  return placeNames;
   // displayDistance();
 };
 //   ?! displayDistance route function code here
@@ -132,8 +155,13 @@ export function dragDrop(
   newList[droppedItemIndex] = draggedItem;
   setAdd(newList);
   const temp = placeNames[draggedItemIndex];
+  console.log(temp);
   placeNames[draggedItemIndex] = placeNames[droppedItemIndex];
   placeNames[droppedItemIndex] = temp;
+  let value1 = document.getElementById(`multi-${draggedItemIndex}`) as any;
+  let value2 = document.getElementById(`multi-${droppedItemIndex}`) as any;
+  // value2.value = placeNames[droppedItemIndex];
+  // value1.value = temp;
   const updatePlaceName = [...placeNames];
   setPlaceNames(updatePlaceName);
 }

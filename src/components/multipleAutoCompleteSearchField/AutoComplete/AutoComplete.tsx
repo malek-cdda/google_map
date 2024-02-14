@@ -15,15 +15,14 @@ const AutoComplete = () => {
   const [astor, setAstor] = useState({ lat: 40.7128, lng: -74.006 });
   const [placeNames, setPlaceNames] = useState(Array(1).fill(""));
   const [map, setMap] = useState<any>(null);
-
   const [add, setAdd] = useState([0]);
+  const [indexNumber, setIndexNumber] = useState<any>(null);
   useEffect(() => {
     const script = customScript();
     script.onload = initializeMap;
     return () => {
       document.head.removeChild(script);
     };
-    1;
   }, [placeNames]);
   // ?!initialize map function
   const initializeMap = async () => {
@@ -33,10 +32,16 @@ const AutoComplete = () => {
   // ?!autocomplete search place code function
   useEffect(() => {
     // try to make a marker in the function
-    if (map) {
-      handleAddedSearchField(map, add, placeNames, setPlaceNames);
+    if (map && indexNumber !== null) {
+      handleAddedSearchField({
+        map,
+        add,
+        placeNames,
+        setPlaceNames,
+        indexNumber,
+      });
     }
-  }, [map, add, placeNames, setPlaceNames]);
+  }, [map, add, placeNames, setPlaceNames, indexNumber]);
   // ?! distance marker draggable for place and route changing system function
   useEffect(() => {
     if (map) {
@@ -61,6 +66,12 @@ const AutoComplete = () => {
   const handleDelete = (index: number) => {
     handleDeleteSearchField(index, setPlaceNames, placeNames, setAdd, add);
   };
+  useEffect(() => {
+    placeNames.map((item, index) => {
+      const routeValue = document.getElementById(`multi-${index}`) as any;
+      routeValue.value = item;
+    });
+  }, [placeNames, map]);
   return (
     <div className="container mx-auto">
       {/* <div id="panel"></div> */}
@@ -82,6 +93,9 @@ const AutoComplete = () => {
                   type="text"
                   placeholder={"search for place" + String(item + 1)}
                   className={`searchInput controls border-2 border-gray-500 w-full h-10 mb-2 rounded-full px-3 py-2 duration-300 ease-linear transform transition-all focus:rounded-none focus:rounded-t-xl  `}
+                  onFocus={(e) => {
+                    setIndexNumber(item);
+                  }}
                 />
 
                 <button
